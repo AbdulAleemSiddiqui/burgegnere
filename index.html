@@ -1575,81 +1575,157 @@ const menuData = {
   },
   en: {
     burgers: [
-      { name: 'Cheeseburger', price: '€5.90', desc: 'Beef, double cheddar, Burgegnere sauce', tags: ['G','L'] },
-      { name: 'Classic', price: '€4.90', desc: 'Beef, tomato, lettuce, Burgegnere sauce', tags: ['G'] },
-      { name: 'Vegetarian', price: '€7.50', desc: 'Fresh vegetable patty, caramelized onion, lettuce, tomato, Burgegnere sauce', tags: ['G','L','U'] },
+      { name: 'Cheeseburger', price: '€5.90', desc: 'Beef, double cheddar, Burgegnere sauce', tags: ['G','U','L','M']},
+      { name: 'Classic', price: '€4.90', desc: 'Beef, tomato, lettuce, Burgegnere sauce', tags: ['G','U','L','M'] },
+      { name: 'Vegetarian', price: '€7.50', desc: 'Fresh vegetable patty, caramelized onion, lettuce, tomato, Burgegnere sauce', tags: ['G','U','L','M','S','SO'] },
     ],
     speciali: [
-      { name: 'BBQ', price: '€8.00', desc: 'Beef, cheddar, smoked scamorza, bacon, caramelized onion, BBQ sauce', tags: ['G','L'], star: true },
-      { name: 'Jalapenos', price: '€8.00', desc: 'Beef, double cheddar, pickles, spicy jalapeño, roasted turkey, honey mayo', tags: ['G','L','U'], star: true },
-      { name: 'Blue Cheese', price: '€7.50', desc: 'Beef, gorgonzola DOP cream, chopped walnuts, honey mayo', tags: ['G','L','FG'], star: true },
-      { name: 'Chicken', price: '€5.90', desc: 'Real chicken cutlet, salad, mayonnaise', tags: ['G','L','U'] },
+      {
+        name: 'BBQ',
+        price: '€8.00',
+        desc: 'Beef, cheddar, smoked scamorza, bacon, caramelized onion, BBQ sauce',
+        tags: ['G','U','L'],
+        star: true
+      },
+      {
+        name: 'Jalapenos',
+        price: '€8.00',
+        desc: 'Beef, double cheddar, pickles, spicy jalapeño, roasted turkey, honey mayo',
+        tags: ['G','U','L','M'],
+        star: true
+      },
+      {
+        name: 'Blue Cheese',
+        price: '€7.50',
+        desc: 'Beef, gorgonzola DOP cream, chopped walnuts, honey mayo',
+        tags: ['G','U','L','M','FG'],
+        star: true
+      },
+      {
+        name: 'Chicken',
+        price: '€5.90',
+        desc: 'Real chicken cutlet, salad, mayonnaise',
+        tags: ['G','U','L','M']
+      }
     ],
+
     fries: [
-      { name: 'French Fries', price: '€3.50', desc: '', tags: [] },
-      { name: 'Sweet Potato Fries', price: '€4.50', desc: '', tags: [] },
-      { name: 'Cheese Sticks', price: '€4.50', desc: 'Portion of 5 pieces', tags: ['G','L'] },
-      { name: 'Cheese Fries', price: '€5.00', desc: '', tags: ['L'] },
+      {
+        name: 'Cheese Sticks',
+        price: '€4.50',
+        desc: 'Portion of 5 pieces',
+        tags: []
+      },
+      {
+        name: 'Cheese Fries',
+        price: '€5.00',
+        desc: '',
+        tags: ['G','U','L']
+      }
     ],
-    extra: [
-      { name: 'Bacon', price: '€1.00' }, { name: 'Mushrooms', price: '€1.90' },
-      { name: 'Cheddar slice', price: '€0.70' }, { name: 'Smoked scamorza', price: '€0.70' },
-      { name: 'Caramelized onion', price: '€0.80' }, { name: 'Jalapeños', price: '€0.90' },
-      { name: 'Lettuce', price: '€0.40' }, { name: 'Tomatoes', price: '€0.40' }, { name: 'Fresh onion', price: '€0.40' },
+
+    desserts: [
+      {
+        name: 'Tiramisù',
+        price: '€3.90',
+        desc: '',
+        tags: ['G','U','L']
+      }
     ],
-    drinks: [
-      { name: 'Can 33cl', price: '€2.70', desc: 'Coca Cola, Fanta, Sprite, Iced Tea', tags: [] },
-      { name: 'Lurisia', price: '€3.20', desc: '', tags: [] },
-      { name: 'Chinotto / Soda', price: '', desc: '', tags: [] },
-      { name: 'Orange / Pink Lemonade', price: '', desc: '', tags: [] },
-      { name: 'Fruit juice', price: '€2.70', desc: '', tags: [] },
-      { name: 'Water (Still/Sparkling)', price: '€1.50', desc: '', tags: [] },
-    ],
-    sauces: [
-      { name: 'Burgegnere Sauce', price: '€0.70' }, { name: 'Calabrian Hot Sauce', price: '€0.90' },
-      { name: 'BBQ Sauce', price: '€0.30' }, { name: 'Honey Mayonnaise', price: '€0.50' },
-      { name: 'Ketchup', price: '€0.30' }, { name: 'Mayonnaise', price: '€0.30' }, { name: 'Mustard', price: '€0.30' },
-    ],
-    desserts: [{ name: 'Tiramisù', price: '€3.90', desc: '', tags: ['G','L','U'] }],
-    salad: [{ name: 'Salad', price: '€5.90', desc: 'Meat or Chicken, green & red lettuce, carrots, arugula, baby spinach, yogurt sauce', tags: ['L'] }],
+
+    salad: [
+      {
+        name: 'Salad',
+        price: '€5.90',
+        desc: 'Meat or Chicken, green & red lettuce, carrots, arugula, baby spinach, yogurt sauce',
+        tags: ['U','L','M']
+      }
+    ]
   },
   fr: {
     burgers: [
-      { name: 'Cheeseburger', price: '€5.90', desc: 'Bœuf, double cheddar, sauce Burgegnere', tags: ['G','L'] },
-      { name: 'Classique', price: '€4.90', desc: 'Bœuf, tomate, salade, sauce Burgegnere', tags: ['G'] },
-      { name: 'Végétarien', price: '€7.50', desc: 'Galette végétale, oignon caramélisé, salade, tomate, sauce Burgegnere', tags: ['G','L','U'] },
+      {
+        name: 'Cheeseburger',
+        price: '€5.90',
+        desc: 'Bœuf, double cheddar, sauce Burgegnere',
+        tags: ['G','U','L','M']
+      },
+      {
+        name: 'Classique',
+        price: '€4.90',
+        desc: 'Bœuf, tomate, salade, sauce Burgegnere',
+        tags: ['G','U','L','M']
+      },
+      {
+        name: 'Végétarien',
+        price: '€7.50',
+        desc: 'Galette végétale, oignon caramélisé, salade, tomate, sauce Burgegnere',
+        tags: ['G','U','L','M','S','SO']
+      }
     ],
+
     speciali: [
-      { name: 'BBQ', price: '€8.00', desc: 'Bœuf, cheddar, scamorza fumée, bacon, oignon caramélisé, sauce BBQ', tags: ['G','L'], star: true },
-      { name: 'Jalapeños', price: '€8.00', desc: 'Bœuf, double cheddar, cornichons, jalapeño piquant, dinde rôtie, mayo miel', tags: ['G','L','U'], star: true },
-      { name: 'Blue Cheese', price: '€7.50', desc: 'Bœuf, crème gorgonzola DOP, noix hachées, mayo miel', tags: ['G','L','FG'], star: true },
-      { name: 'Poulet', price: '€5.90', desc: 'Escalope de poulet, salade, mayonnaise', tags: ['G','L','U'] },
+      {
+        name: 'BBQ',
+        price: '€8.00',
+        desc: 'Bœuf, cheddar, scamorza fumée, bacon, oignon caramélisé, sauce BBQ',
+        tags: ['G','U','L'],
+        star: true
+      },
+      {
+        name: 'Jalapeños',
+        price: '€8.00',
+        desc: 'Bœuf, double cheddar, cornichons, jalapeño piquant, dinde rôtie, mayo miel',
+        tags: ['G','U','L','M'],
+        star: true
+      },
+      {
+        name: 'Blue Cheese',
+        price: '€7.50',
+        desc: 'Bœuf, crème gorgonzola DOP, noix hachées, mayo miel',
+        tags: ['G','U','L','M','FG'],
+        star: true
+      },
+      {
+        name: 'Poulet',
+        price: '€5.90',
+        desc: 'Escalope de poulet, salade, mayonnaise',
+        tags: ['G','U','L','M']
+      }
     ],
+
     fries: [
-      { name: 'Frites', price: '€3.50', desc: '', tags: [] },
-      { name: 'Frites de patate douce', price: '€4.50', desc: '', tags: [] },
-      { name: 'Bâtonnets de fromage', price: '€4.50', desc: 'Portion de 5 pièces', tags: ['G','L'] },
-      { name: 'Cheese Fries', price: '€5.00', desc: '', tags: ['L'] },
+      {
+        name: 'Bâtonnets de fromage',
+        price: '€4.50',
+        desc: 'Portion de 5 pièces',
+        tags: []
+      },
+      {
+        name: 'Cheese Fries',
+        price: '€5.00',
+        desc: '',
+        tags: ['G','U','L']
+      }
     ],
-    extra: [
-      { name: 'Bacon', price: '€1.00' }, { name: 'Champignons', price: '€1.90' },
-      { name: 'Tranche cheddar', price: '€0.70' }, { name: 'Scamorza fumée', price: '€0.70' },
-      { name: 'Oignon caramélisé', price: '€0.80' }, { name: 'Jalapeños', price: '€0.90' },
-      { name: 'Salade', price: '€0.40' }, { name: 'Tomates', price: '€0.40' }, { name: 'Oignon frais', price: '€0.40' },
+
+    desserts: [
+      {
+        name: 'Tiramisù',
+        price: '€3.90',
+        desc: '',
+        tags: ['G','U','L']
+      }
     ],
-    drinks: [
-      { name: 'Canette 33cl', price: '€2.70', desc: 'Coca Cola, Fanta, Sprite, Iced Tea', tags: [] },
-      { name: 'Lurisia', price: '€3.20', desc: '', tags: [] },
-      { name: 'Eau (plate/gazeuse)', price: '€1.50', desc: '', tags: [] },
-      { name: 'Jus de fruit', price: '€2.70', desc: '', tags: [] },
-    ],
-    sauces: [
-      { name: 'Sauce Burgegnere', price: '€0.70' }, { name: 'Sauce piquante Calabraise', price: '€0.90' },
-      { name: 'Sauce BBQ', price: '€0.30' }, { name: 'Mayo miel', price: '€0.50' },
-      { name: 'Ketchup', price: '€0.30' }, { name: 'Mayonnaise', price: '€0.30' }, { name: 'Moutarde', price: '€0.30' },
-    ],
-    desserts: [{ name: 'Tiramisù', price: '€3.90', desc: '', tags: ['G','L','U'] }],
-    salad: [{ name: 'Salade', price: '€5.90', desc: 'Viande ou Poulet, laitues, carottes, roquette, épinards, sauce yaourt', tags: ['L'] }],
+
+    salad: [
+      {
+        name: 'Salade',
+        price: '€5.90',
+        desc: 'Viande ou Poulet, laitues, carottes, roquette, épinards, sauce yaourt',
+        tags: ['U','L','M']
+      }
+    ]
   }
 };
 
