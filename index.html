@@ -1,0 +1,1751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Burgegnere - La Meccanica Del Gusto</title>
+<meta name="description" content="The best smash burger in Genova. Via Luccoli 5R. Science meets flavor.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Caveat:wght@400;600;700&family=Special+Elite&family=Luckiest+Guy&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --chalk-white: #F2EFE5;
+    --chalk-dim: #C8C2B0;
+    --chalk-faint: rgba(242,239,229,0.15);
+    --board-dark: #1A1A18;
+    --board-mid: #222220;
+    --board-green: #1E2820;
+    --gold: #F5CA2E;
+    --gold-dim: #C9A020;
+    --red-chalk: #E84040;
+    --blue-chalk: #6AABF7;
+    --green-chalk: #7DD87A;
+    --orange-chalk: #F5A030;
+    --board-texture: repeating-linear-gradient(
+      0deg, transparent, transparent 2px,
+      rgba(255,255,255,0.01) 2px, rgba(255,255,255,0.01) 4px
+    );
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--board-dark);
+    color: var(--chalk-white);
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* ===== CHALKBOARD TEXTURE OVERLAY ===== */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: var(--board-texture);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ===== MATH BACKGROUND ===== */
+  .math-bg {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+    opacity: 0.07;
+  }
+  .math-bg canvas { width: 100%; height: 100%; }
+
+  /* ===== NAV ===== */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 40px;
+    background: linear-gradient(to bottom, rgba(26,26,24,0.95), transparent);
+    backdrop-filter: blur(4px);
+  }
+
+  .nav-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 1.5px;
+    font-family: 'Luckiest Guy', cursive;
+    font-size: 1.3rem;
+    color: #ffffff;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    font-weight: 300;
+  }
+  .nav-logo img {
+    height: 1.9rem;
+    width: auto;
+    display: block;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: 'Caveat', cursive;
+    font-size: 1.1rem;
+    color: var(--chalk-dim);
+    text-decoration: none;
+    transition: color 0.2s;
+    letter-spacing: 0.02em;
+  }
+  .nav-links a:hover { color: var(--chalk-white); }
+
+  .nav-order-btn {
+    background: var(--gold);
+    color: #111;
+    font-family: 'Caveat', cursive;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 8px 20px;
+    border-radius: 2px;
+    text-decoration: none;
+    letter-spacing: 0.03em;
+    transition: background 0.2s;
+  }
+  .nav-order-btn:hover { background: #ffd84f; }
+
+  /* ===== HERO ===== */
+  #hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    z-index: 1;
+    background-image: url('hero_bg.jpg');
+    background-size: cover;
+    background-position: center top;
+  }
+
+#hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      ellipse 65% 50% at 42% 55%,
+      rgba(10,10,9,0.95) 0%,
+      rgba(10,10,9,0.85) 35%,
+      rgba(10,10,9,0.65) 55%,
+      rgba(10,10,9,0.25) 78%,
+      transparent 100%
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(10,10,9,0.55) 0%,
+      rgba(10,10,9,0.25) 20%,
+      rgba(10,10,9,0.55) 65%,
+      rgba(10,10,9,0.95) 100%
+    );
+
+  z-index: 1;
+  pointer-events: none;
+}
+
+  .hero-content {
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    padding: 160px 20px 60px;
+  }
+
+  .hero-eyebrow {
+    font-family: 'Caveat', cursive;
+    font-size: 1.2rem;
+    color: var(--chalk-dim);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.9);
+  }
+
+  .hero-title {
+    font-family: 'Luckiest Guy', cursive;
+    font-size: clamp(3.5rem, 10vw, 8rem);
+    font-weight: 300;
+    line-height: 0.9;
+    color: var(--chalk-white);
+    position: relative;
+    text-shadow: 0 4px 24px rgba(0,0,0,0.85), 0 2px 6px rgba(0,0,0,0.9);
+  }
+  .hero-title .B-drip {
+    display: inline-block;
+    position: relative;
+    height: 1.6em;
+    width: auto;
+    vertical-align: middle;
+  }
+  .hero-title .B-drip img {
+    height: 100%;
+    width: auto;
+    display: block;
+    object-fit: contain;
+  }
+
+  .hero-sub {
+    font-family: 'Special Elite', serif;
+    font-size: clamp(0.85rem, 2vw, 1.05rem);
+    color: var(--chalk-dim);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    font-weight: bold;
+ 
+    text-shadow: 0 2px 10px rgba(0,0,0,0.9);
+  }
+
+  .hero-tagline {
+    font-family: 'Caveat', cursive;
+    font-size: clamp(1.6rem, 4vw, 2.8rem);
+    color: var(--gold);
+    margin-top: 24px;
+    font-weight: 700;
+    text-shadow: 0 2px 14px rgba(0,0,0,0.85);
+  }
+
+  .hero-formula {
+    font-family: 'Caveat', cursive;
+    font-size: 1rem;
+    color: var(--chalk-dim);
+    margin-top: 12px;
+    opacity: 0.85;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.9);
+  }
+
+  .hero-ctas {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 40px;
+  }
+
+  .cta-primary {
+    background: var(--gold);
+    color: #111;
+    font-family: 'Caveat', cursive;
+    font-size: 1.3rem;
+    font-weight: 700;
+    padding: 14px 36px;
+    border-radius: 2px;
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    transition: all 0.2s;
+    box-shadow: 0 4px 20px rgba(245,200,66,0.3);
+  }
+  .cta-primary:hover { background: #ffd84f; transform: translateY(-2px); }
+
+  .cta-secondary {
+    border: 1.5px solid var(--chalk-dim);
+    color: var(--chalk-white);
+    font-family: 'Caveat', cursive;
+    font-size: 1.3rem;
+    padding: 14px 36px;
+    border-radius: 2px;
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    transition: all 0.2s;
+  }
+  .cta-secondary:hover { border-color: var(--chalk-white); background: rgba(255,255,255,0.05); }
+
+  .hero-location {
+    font-family: 'Caveat', cursive;
+    font-size: 1rem;
+    color: var(--chalk-dim);
+    margin-top: 24px;
+    opacity: 0.75;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.9);
+  }
+
+  /* ===== CHALK SCRIBBLES (decorative SVGs) ===== */
+  .chalk-scribbles {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  /* ===== 3D BURGER SCROLL SECTION ===== */
+#burger-builder {
+  position: relative;
+  z-index: 1;
+  min-height: 500vh;
+
+  background-image:
+    radial-gradient(
+      ellipse 70% 55% at 50% 50%,
+      rgba(10,10,9,0.92) 0%,
+      rgba(10,10,9,0.85) 30%,
+      rgba(10,10,9,0.70) 50%,
+      rgba(10,10,9,0.40) 75%,
+      transparent 100%
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(10,10,9,0.65) 0%,
+      rgba(10,10,9,0.35) 15%,
+      rgba(10,10,9,0.35) 85%,
+      rgba(10,10,9,0.80) 100%
+    ),
+    url('science_bg.png');
+
+  background-size: cover;
+  background-position: 70% top;
+  background-repeat: no-repeat;
+}
+
+  .burger-sticky {
+    position: relative;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .burger-scene {
+    position: relative;
+    width: min(85vw, 460px);
+    height: min(96vw, 500px);
+    filter: drop-shadow(0 35px 45px rgba(0,0,0,0.55));
+  }
+
+  .burger-scene svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .burger-scene .layer {
+    opacity: 0;
+    transform: translateY(40px) scale(0.85);
+    transition: transform 0.5s cubic-bezier(.4,0,.2,1), opacity 0.5s ease;
+  }
+
+  .burger-label {
+    position: absolute;
+    right: -150px;
+    font-family: 'Caveat', cursive;
+    font-size: 1rem;
+    color: var(--chalk-dim);
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .burger-label::before {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 1px;
+    background: var(--chalk-dim);
+  }
+
+  .burger-scroll-hint {
+    position: absolute;
+    bottom: 40px;
+    font-family: 'Caveat', cursive;
+    font-size: 1rem;
+    color: var(--chalk-dim);
+    animation: bounce 2s infinite;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.85);
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(6px); }
+  }
+
+  .burger-section-title {
+    font-family: 'Permanent Marker', cursive;
+    font-size: clamp(1.2rem, 3vw, 2rem);
+    color: var(--gold);
+    text-align: center;
+    margin-bottom: 20px;
+    min-height: 48px;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.85), 0 1px 2px rgba(0,0,0,0.9);
+    padding: 0 16px;
+  }
+
+  /* ===== SECTION DIVIDER ===== */
+  .chalk-divider {
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+    height: 2px;
+    background: linear-gradient(to right, transparent, var(--chalk-faint), rgba(242,239,229,0.35), var(--chalk-faint), transparent);
+    position: relative;
+  }
+
+  /* ===== MENU SECTION ===== */
+  #menu {
+    position: relative;
+    z-index: 1;
+    padding: 80px 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+
+  .section-title {
+    font-family: 'Permanent Marker', cursive;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    color: var(--chalk-white);
+    position: relative;
+    display: inline-block;
+  }
+  .section-title.gold { color: var(--gold); }
+
+  .section-subtitle {
+    font-family: 'Caveat', cursive;
+    font-size: 1.1rem;
+    color: var(--chalk-dim);
+    margin-top: 8px;
+  }
+
+  /* LANG SWITCH */
+  .lang-switch {
+    display: flex;
+    gap: 0;
+    justify-content: center;
+    margin-bottom: 48px;
+  }
+  .lang-btn {
+    font-family: 'Caveat', cursive;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 8px 24px;
+    border: 1.5px solid var(--chalk-faint);
+    background: transparent;
+    color: var(--chalk-dim);
+    cursor: pointer;
+    letter-spacing: 0.1em;
+    transition: all 0.2s;
+  }
+  .lang-btn:first-child { border-radius: 2px 0 0 2px; }
+  .lang-btn:last-child  { border-radius: 0 2px 2px 0; border-left: none; }
+  .lang-btn.active {
+    background: var(--gold);
+    color: #111;
+    border-color: var(--gold);
+    font-weight: 700;
+  }
+
+  /* MENU GRID */
+  .menu-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px 60px;
+  }
+  @media(max-width:760px) { .menu-grid { grid-template-columns: 1fr; } }
+
+  .menu-cat-title {
+    font-family: 'Permanent Marker', cursive;
+    font-size: 2rem;
+    color: var(--gold);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--chalk-faint);
+    position: relative;
+  }
+  .menu-cat-title.white { color: var(--chalk-white); }
+
+  .menu-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px 0;
+    border-bottom: 1px dashed rgba(242,239,229,0.08);
+  }
+
+  .menu-item-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+  }
+
+  .menu-item-name {
+    font-family: 'Special Elite', serif;
+    font-size: 0.95rem;
+    color: var(--chalk-white);
+    flex: 1;
+  }
+  .menu-item-name .dots {
+    color: var(--chalk-faint);
+    flex: 1;
+    border-bottom: 1px dotted rgba(242,239,229,0.15);
+    margin: 0 6px;
+    min-width: 20px;
+  }
+
+  .menu-item-price {
+    font-family: 'Caveat', cursive;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--gold);
+    white-space: nowrap;
+  }
+
+  .menu-item-desc {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.78rem;
+    color: var(--chalk-dim);
+    line-height: 1.5;
+    opacity: 0.75;
+  }
+
+  .menu-item-tags {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+  }
+
+  .tag {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.55rem;
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+  .tag-g  { background: #E8A020; color: #111; } /* Glutine */
+  .tag-l  { background: #E8D840; color: #111; } /* Latte */
+  .tag-u  { background: #9B59B6; color: #fff; } /* Uova */
+  .tag-s  { background: #E84040; color: #fff; } /* Sedano */
+  .tag-m  { background: #5B8DD9; color: #fff; } /* Senape */
+  .tag-fp { background: #4CAF50; color: #fff; } /* Frutta a guscio */
+
+  /* ALLERGEN KEY */
+  .allergen-key {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 40px;
+    padding: 20px;
+    border: 1px dashed var(--chalk-faint);
+    border-radius: 2px;
+  }
+  .allergen-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.72rem;
+    color: var(--chalk-dim);
+  }
+
+  /* COMBO BOX */
+  .combo-box {
+    grid-column: 1 / -1;
+    border: 2px solid var(--gold);
+    border-radius: 2px;
+    padding: 28px;
+    display: flex;
+    gap: 40px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    background: rgba(245,200,66,0.04);
+  }
+  .combo-item {
+    text-align: center;
+  }
+  .combo-label {
+    font-family: 'Permanent Marker', cursive;
+    font-size: 2rem;
+    color: var(--gold);
+  }
+  .combo-sub {
+    font-family: 'Caveat', cursive;
+    font-size: 1rem;
+    color: var(--chalk-dim);
+  }
+  .combo-includes {
+    font-family: 'Caveat', cursive;
+    font-size: 1.1rem;
+    color: var(--chalk-white);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .combo-includes span::before { content: '✓ '; color: var(--gold); }
+
+  /* ===== DELIVERY SECTION ===== */
+  #order {
+    position: relative;
+    z-index: 1;
+    padding: 80px 20px;
+    text-align: center;
+  }
+
+  .delivery-grid {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 40px;
+  }
+
+  .delivery-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 24px 32px;
+    border: 1.5px solid var(--chalk-faint);
+    border-radius: 2px;
+    text-decoration: none;
+    transition: all 0.2s;
+    min-width: 140px;
+    background: rgba(255,255,255,0.02);
+  }
+  .delivery-card:hover {
+    border-color: var(--gold);
+    background: rgba(245,200,66,0.05);
+    transform: translateY(-3px);
+  }
+  .delivery-card-name {
+    font-family: 'Caveat', cursive;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--chalk-white);
+  }
+  .delivery-card-emoji { font-size: 2rem; }
+
+  /* ===== REVIEWS ===== */
+  #reviews {
+    position: relative;
+    z-index: 1;
+    padding: 80px 20px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+    margin-top: 40px;
+  }
+
+  .review-card {
+    padding: 24px;
+    border: 1px dashed var(--chalk-faint);
+    border-radius: 2px;
+    position: relative;
+  }
+  .review-card::before {
+    content: '"';
+    position: absolute;
+    top: -10px; left: 16px;
+    font-family: 'Permanent Marker', cursive;
+    font-size: 3rem;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .review-text {
+    font-family: 'Caveat', cursive;
+    font-size: 1.05rem;
+    color: var(--chalk-white);
+    line-height: 1.5;
+    margin-bottom: 12px;
+  }
+  .review-stars {
+    color: var(--gold);
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+  }
+  .review-author {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    color: var(--chalk-dim);
+    opacity: 0.6;
+  }
+
+  /* ===== INFO / FIND US ===== */
+  #info {
+    position: relative;
+    z-index: 1;
+    padding: 80px 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-top: 40px;
+    text-align: left;
+  }
+  @media(max-width:560px) { .info-grid { grid-template-columns: 1fr; } }
+
+  .info-block-title {
+    font-family: 'Caveat', cursive;
+    font-size: 1rem;
+    color: var(--gold);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .info-block-content {
+    font-family: 'Special Elite', serif;
+    font-size: 0.9rem;
+    color: var(--chalk-dim);
+    line-height: 1.9;
+  }
+
+  .info-block-content a {
+    color: var(--chalk-white);
+    text-decoration: none;
+    border-bottom: 1px dashed var(--chalk-faint);
+    transition: border-color 0.2s;
+  }
+  .info-block-content a:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* SOCIAL */
+  .social-links {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 40px;
+  }
+  .social-link {
+    font-family: 'Caveat', cursive;
+    font-size: 1.1rem;
+    color: var(--chalk-dim);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border: 1px solid var(--chalk-faint);
+    border-radius: 2px;
+    transition: all 0.2s;
+  }
+  .social-link:hover { color: var(--chalk-white); border-color: var(--chalk-dim); }
+
+  /* ===== FOOTER ===== */
+  footer {
+    position: relative;
+    z-index: 1;
+    padding: 40px 20px;
+    text-align: center;
+    border-top: 1px solid var(--chalk-faint);
+  }
+  .footer-logo {
+    font-family: 'Permanent Marker', cursive;
+    font-size: 2rem;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+  .footer-sub {
+    font-family: 'Special Elite', serif;
+    font-size: 0.75rem;
+    color: var(--chalk-dim);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    opacity: 0.5;
+    margin-bottom: 20px;
+  }
+  .footer-links {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .footer-links a {
+    font-family: 'Caveat', cursive;
+    font-size: 0.9rem;
+    color: var(--chalk-dim);
+    text-decoration: none;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+  }
+  .footer-links a:hover { opacity: 1; }
+
+  /* ===== HALAL BADGE ===== */
+  .halal-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(77,175,74,0.12);
+    border: 1px solid rgba(77,175,74,0.4);
+    color: #7DD87A;
+    font-family: 'Caveat', cursive;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 6px 16px;
+    border-radius: 2px;
+    margin-top: 16px;
+  }
+
+  /* ===== UTILS ===== */
+  .text-center { text-align: center; }
+  .mt-8 { margin-top: 8px; }
+  .mt-16 { margin-top: 16px; }
+  .mt-40 { margin-top: 40px; }
+  .full-width { grid-column: 1 / -1; }
+
+  /* WAVY underline on menu cat */
+  .wavy {
+    text-decoration: underline;
+    text-decoration-style: wavy;
+    text-decoration-color: var(--gold);
+  }
+
+  /* MENU SPECIAL STAR */
+  .star-item .menu-item-name::before {
+    content: '★ ';
+    color: var(--gold);
+    font-size: 0.8rem;
+  }
+
+  /* ===== ANIMATED CHALK ELEMENTS ===== */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-in { animation: fadeInUp 0.6s ease forwards; }
+
+  /* ===== MOBILE NAV ===== */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 4px;
+  }
+  .hamburger span {
+    width: 24px; height: 2px;
+    background: var(--chalk-white);
+    border-radius: 1px;
+    transition: all 0.2s;
+  }
+
+  @media(max-width: 680px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    nav { padding: 14px 20px; }
+    .hero-ctas { flex-direction: column; align-items: center; }
+  }
+
+  /* ===== SCIENCE FORMULA ROW ===== */
+  .formula-row {
+    text-align: center;
+    padding: 40px 20px;
+    position: relative;
+    z-index: 1;
+  }
+  .formula {
+    font-family: 'Caveat', cursive;
+    font-size: clamp(1rem, 2.5vw, 1.5rem);
+    color: var(--chalk-dim);
+    opacity: 0.5;
+    letter-spacing: 0.05em;
+  }
+  .formula .highlight { color: var(--gold); opacity: 1; }
+
+  /* ===== SCROLL PROGRESS ===== */
+  .scroll-progress {
+    position: fixed;
+    top: 0; left: 0;
+    height: 2px;
+    background: var(--gold);
+    z-index: 1000;
+    width: 0%;
+    transition: width 0.1s linear;
+  }
+
+  /* PDF BACKUP */
+  .pdf-links {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 24px;
+    flex-wrap: wrap;
+  }
+  .pdf-link {
+    font-family: 'Caveat', cursive;
+    font-size: 0.95rem;
+    color: var(--chalk-dim);
+    text-decoration: none;
+    border-bottom: 1px dashed var(--chalk-faint);
+    transition: color 0.2s;
+  }
+  .pdf-link:hover { color: var(--chalk-white); }
+</style>
+</head>
+<body>
+
+<!-- Scroll progress -->
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- Animated math background -->
+<div class="math-bg">
+  <canvas id="mathCanvas"></canvas>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="#hero" class="nav-logo">
+    <img src="logo-without-background.png" alt="Burgegnere logo">URGEGNERE
+  </a>
+  <ul class="nav-links">
+    <li><a href="#burger-builder">The Burger</a></li>
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#order">Order</a></li>
+    <li><a href="#info">Find Us</a></li>
+  </ul>
+  <a href="#order" class="nav-order-btn">Order Now →</a>
+  <div class="hamburger" onclick="toggleMobileMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section id="hero">
+  <div class="hero-content">
+    <div class="hero-eyebrow">Via Luccoli 5R · Genova · Halal 🥩</div>
+
+    <h1 class="hero-title">
+      <span class="B-drip"><img src="logo-without-background.png" alt="Burgegnere Logo"></span>URGEGNERE
+    </h1>
+    <div class="hero-sub">La Meccanica Del Gusto</div>
+
+    <div class="hero-tagline">
+      uno Smash Burger che cambia tutto
+    </div>
+    <div class="hero-formula">
+      Carne + Calore + Scienza = Il miglior burger di Genova
+    </div>
+
+    <div class="halal-badge">
+      ✓ 100% Halal
+    </div>
+
+    <div class="hero-ctas">
+      <a href="#menu" class="cta-primary">Vedi il Menu</a>
+      <a href="#order" class="cta-secondary">Ordina a Casa →</a>
+    </div>
+    <div class="hero-location">📍 Via Luccoli 5R, Genova Centro — a 5 min dal Porto Antico</div>
+  </div>
+</section>
+
+<!-- ===== FORMULA ROW ===== -->
+<div class="formula-row">
+  <p class="formula">
+    AminoAcidi + Zuccheri Riducenti
+    <span class="highlight"> →<sub>h</sub> </span>
+    Reazione di Maillard
+    <span class="highlight"> = </span>
+    Sapore Perfetto
+  </p>
+</div>
+
+<!-- ===== 3D BURGER SCROLL BUILDER ===== -->
+<section id="burger-builder">
+  <div class="burger-sticky">
+    <div class="burger-section-title" id="burgerTitle">Scroll to build your burger</div>
+    <div class="burger-scene" id="burgerScene">
+      <!-- Layers rendered by JS as SVG shapes -->
+    </div>
+    <div class="burger-scroll-hint" id="scrollHint">
+      <span>↓ scroll</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== MENU ===== -->
+<section id="menu">
+  <div class="section-header">
+    <h2 class="section-title gold">Menu</h2>
+    <p class="section-subtitle">— La Meccanica Del Gusto —</p>
+  </div>
+
+  <!-- Lang switch -->
+  <div class="lang-switch">
+    <button class="lang-btn active" onclick="switchLang('it')">🇮🇹 IT</button>
+    <button class="lang-btn" onclick="switchLang('en')">🇬🇧 EN</button>
+    <button class="lang-btn" onclick="switchLang('fr')">🇫🇷 FR</button>
+  </div>
+
+  <div class="menu-grid" id="menuGrid">
+    <!-- Rendered by JS -->
+  </div>
+
+  <!-- Allergen key -->
+  <div class="allergen-key" style="margin-top:40px">
+    <div class="allergen-item"><span class="tag tag-g">G</span> Glutine</div>
+    <div class="allergen-item"><span class="tag tag-l">L</span> Latte</div>
+    <div class="allergen-item"><span class="tag tag-u">U</span> Uova</div>
+    <div class="allergen-item"><span class="tag tag-s">S</span> Sedano</div>
+    <div class="allergen-item"><span class="tag tag-m">M</span> Senape</div>
+    <div class="allergen-item"><span class="tag tag-fp">FG</span> Frutta a guscio</div>
+  </div>
+
+  <!-- PDF backup -->
+  <div class="pdf-links">
+    <a href="https://drive.google.com/file/d/1XoUad8ZT9h3zBEYL3FfUbu1DeadlXFNo/view" target="_blank" class="pdf-link">📄 Download Menu EN (PDF)</a>
+    <a href="https://drive.google.com/file/d/1r_i0nGInnlrNcYlbQu2TFCZ3Vq4mXyOo/view" target="_blank" class="pdf-link">📄 Télécharger Menu FR (PDF)</a>
+  </div>
+</section>
+
+<!-- ===== ORDER SECTION ===== -->
+<section id="order" style="background: rgba(255,255,255,0.01); border-top: 1px solid var(--chalk-faint); border-bottom: 1px solid var(--chalk-faint);">
+  <div class="section-header">
+    <h2 class="section-title">Ordina Ora</h2>
+    <p class="section-subtitle">Consegna a domicilio o ritiro</p>
+  </div>
+
+  <div class="delivery-grid">
+    <a href="https://glovoapp.com/it/it/genova/stores/burgegnere-gen" target="_blank" class="delivery-card">
+      <span class="delivery-card-emoji">🟡</span>
+      <span class="delivery-card-name">Glovo</span>
+    </a>
+    <a href="https://deliveroo.it/it/menu/genova/genova-centro/burgegnere-via-luccoli-5r" target="_blank" class="delivery-card">
+      <span class="delivery-card-emoji">🩵</span>
+      <span class="delivery-card-name">Deliveroo</span>
+    </a>
+    <a href="https://www.tripadvisor.it/Restaurant_Review-g12130280-d33060825-Reviews-Burgegnere-San_Quirico_Province_of_Genoa_Liguria.html" target="_blank" class="delivery-card">
+      <span class="delivery-card-emoji">🟢</span>
+      <span class="delivery-card-name">TripAdvisor</span>
+    </a>
+    <a href="https://wa.me/393484197815" target="_blank" class="delivery-card">
+      <span class="delivery-card-emoji">💬</span>
+      <span class="delivery-card-name">WhatsApp</span>
+    </a>
+  </div>
+
+  <p style="font-family:'Caveat',cursive; font-size:0.9rem; color:var(--chalk-dim); margin-top:24px; opacity:0.5; text-align:center">
+    * Aggiornare il numero WhatsApp con quello reale del locale
+  </p>
+</section>
+
+<!-- ===== REVIEWS ===== -->
+<section id="reviews">
+  <div class="section-header">
+    <h2 class="section-title">Cosa dicono di noi</h2>
+    <p class="section-subtitle">★★★★★ · 4.9 su Google · 4.8 su Glovo</p>
+  </div>
+
+  <div class="reviews-grid">
+    <div class="review-card">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">Best burger in Genova and Italy! Very delicious! The fries are well cooked. Burger's meat is tender and juicy. The owner is very friendly and nice.</p>
+      <div class="review-author">— Google Review</div>
+    </div>
+    <div class="review-card">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">We stayed in Genova for 4 days. We ate here 3 out of those 4 days. The jalapeno burger was amazing — meat tender, sauces delicious, portions fulfilling. Halal burgers that are actually delicious!</p>
+      <div class="review-author">— TripAdvisor</div>
+    </div>
+    <div class="review-card">
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">This was a perfect smashburger — onions, cheese, mushrooms all perfect. If you want a really good smashburger in Genoa, this is the place.</p>
+      <div class="review-author">— Google Review</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== INFO ===== -->
+<section id="info">
+  <div class="section-header">
+    <h2 class="section-title">Trovaci</h2>
+    <p class="section-subtitle">Nel cuore di Genova</p>
+  </div>
+
+  <div class="info-grid">
+    <div>
+      <div class="info-block-title">📍 Indirizzo</div>
+      <div class="info-block-content">
+        Via Luccoli, 5R<br>
+        16123 Genova GE<br>
+        <a href="https://maps.google.com/?q=Via+Luccoli+5R+Genova" target="_blank">Apri in Google Maps →</a>
+      </div>
+    </div>
+    <div>
+      <div class="info-block-title">🕐 Orari</div>
+      <div class="info-block-content">
+        Lun–Dom<br>
+        12:00 – 15:00<br>
+        18:30 – 22:30
+      </div>
+    </div>
+    <div>
+      <div class="info-block-title">📱 Contatti</div>
+      <div class="info-block-content">
+        <a href="https://www.instagram.com/burgegnere/" target="_blank">@burgegnere su Instagram</a><br>
+        <a href="https://wa.me/39XXXXXXXXXX">WhatsApp</a>
+      </div>
+    </div>
+    <div>
+      <div class="info-block-title">ℹ️ Info</div>
+      <div class="info-block-content">
+        Halal Certified ✓<br>
+        Parcheggio vicino: Porto Antico<br>
+        A 5 min a piedi dall'Acquario
+      </div>
+    </div>
+  </div>
+
+  <div class="social-links">
+    <a href="https://www.instagram.com/burgegnere/" target="_blank" class="social-link">
+      📸 Instagram
+    </a>
+    <a href="https://glovoapp.com/it/it/genova/stores/burgegnere-gen" target="_blank" class="social-link">
+      🟡 Glovo
+    </a>
+    <a href="https://deliveroo.it/it/menu/genova/genova-centro/burgegnere-via-luccoli-5r" target="_blank" class="social-link">
+      🩵 Deliveroo
+    </a>
+    <a href="https://www.tripadvisor.it/Restaurant_Review-g12130280-d33060825-Reviews-Burgegnere" target="_blank" class="social-link">
+      🟢 TripAdvisor
+    </a>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="footer-logo">Burgegnere</div>
+  <div class="footer-sub">La Meccanica Del Gusto · Via Luccoli 5R · Genova</div>
+  <div class="footer-links">
+    <a href="#menu">Menu</a>
+    <a href="#order">Ordina</a>
+    <a href="#info">Contatti</a>
+    <a href="https://drive.google.com/file/d/1XoUad8ZT9h3zBEYL3FfUbu1DeadlXFNo/view" target="_blank">Menu PDF EN</a>
+    <a href="https://drive.google.com/file/d/1r_i0nGInnlrNcYlbQu2TFCZ3Vq4mXyOo/view" target="_blank">Menu PDF FR</a>
+  </div>
+  <p style="font-family:'Inter',sans-serif;font-size:0.65rem;color:var(--chalk-dim);opacity:0.3;margin-top:20px">
+    © 2025 Burgegnere. Tutti i diritti riservati.
+  </p>
+</footer>
+
+<script>
+// ===== SCROLL PROGRESS =====
+window.addEventListener('scroll', () => {
+  const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+  document.getElementById('scrollProgress').style.width = pct + '%';
+});
+
+// ===== MATH CANVAS BACKGROUND =====
+(function() {
+  const canvas = document.getElementById('mathCanvas');
+  const ctx = canvas.getContext('2d');
+  const formulas = [
+    'T = 1/(1-ecosφ)', 'Σn-1', 'lim|x|=1',
+    'AminoAcidi + Zuccheri → Sapori', 'π ≈ 3.1415',
+    'CH₃COOH + Zolfo → Bilanciato', 'f+B = Caramellizzazione',
+    'Reazione di Maillard', 'y = 1-A°C', '∫(x+a)⁴',
+    'Σ(x-m)²/n', 'Zucchero → Glucosio + Fruttosio',
+    'H₂O = 2H⁺', 'C₆H₁₂O₆', 'CH₂OH', 'T → ∞',
+    'lim(x→∞)', 'sinφ', 'cosX', '∂f/∂x'
+  ];
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    drawFormulas();
+  }
+
+  function drawFormulas() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = 'rgba(242,239,229,1)';
+    ctx.font = '13px Georgia';
+    const positions = [];
+    for (let i = 0; i < 35; i++) {
+      const x = Math.random() * canvas.width;
+      const y = Math.random() * canvas.height;
+      const txt = formulas[Math.floor(Math.random() * formulas.length)];
+      const angle = (Math.random() - 0.5) * 0.3;
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(angle);
+      ctx.globalAlpha = 0.15 + Math.random() * 0.2;
+      ctx.font = (10 + Math.random() * 6) + 'px Georgia';
+      ctx.fillText(txt, 0, 0);
+      ctx.restore();
+    }
+  }
+
+  window.addEventListener('resize', resize);
+  resize();
+})();
+
+// ===== BURGER 3D SCROLL ANIMATION (realistic layered SVG) =====
+(function() {
+  const scene = document.getElementById('burgerScene');
+  const titleEl = document.getElementById('burgerTitle');
+  const hintEl = document.getElementById('scrollHint');
+
+  const titles = [
+    'Il tuo burger inizia qui...',
+    'La base: bun brioche tostato',
+    'La salsa segreta Burgegnere',
+    'Cipolla caramellata 🧅',
+    'Smash patty 100% manzo Halal 🥩',
+    'Double cheddar fuso 🧀',
+    'Il secondo patty — doppia soddisfazione',
+    'Scamorza affumicata 🔥',
+    'Insalata fresca, sempre',
+    '🍔 Ecco il tuo Burgegnere!'
+  ];
+
+  const svgNS = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(svgNS, 'svg');
+  svg.setAttribute('viewBox', '0 0 460 520');
+  svg.setAttribute('preserveAspectRatio', 'xMidYMax meet');
+  scene.appendChild(svg);
+
+  svg.innerHTML = `
+  <defs>
+    <radialGradient id="bunTopGrad" cx="36%" cy="18%" r="85%">
+      <stop offset="0%" stop-color="#E8A55A"/>
+      <stop offset="42%" stop-color="#CD7E33"/>
+      <stop offset="78%" stop-color="#A35C1D"/>
+      <stop offset="100%" stop-color="#783E0F"/>
+    </radialGradient>
+    <radialGradient id="bunBotGrad" cx="42%" cy="10%" r="95%">
+      <stop offset="0%" stop-color="#D88F44"/>
+      <stop offset="60%" stop-color="#AD6A24"/>
+      <stop offset="100%" stop-color="#7E4612"/>
+    </radialGradient>
+    <linearGradient id="pattyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#6B4128"/>
+      <stop offset="35%" stop-color="#4A2A1B"/>
+      <stop offset="100%" stop-color="#1E0F08"/>
+    </linearGradient>
+    <linearGradient id="cheeseGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFDB66"/>
+      <stop offset="100%" stop-color="#EFA416"/>
+    </linearGradient>
+    <linearGradient id="cheese2Grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#F2CE74"/>
+      <stop offset="100%" stop-color="#CC9116"/>
+    </linearGradient>
+    <linearGradient id="lettuceGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#A3D356"/>
+      <stop offset="55%" stop-color="#5F9C2C"/>
+      <stop offset="100%" stop-color="#386A14"/>
+    </linearGradient>
+    <linearGradient id="sauceGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#CD7119"/>
+      <stop offset="100%" stop-color="#7E3A07"/>
+    </linearGradient>
+    <radialGradient id="seedGrad" cx="32%" cy="28%" r="75%">
+      <stop offset="0%" stop-color="#FFF8E0"/>
+      <stop offset="100%" stop-color="#E2BE71"/>
+    </radialGradient>
+    <radialGradient id="onionGrad" cx="38%" cy="22%" r="85%">
+      <stop offset="0%" stop-color="#E8B255"/>
+      <stop offset="55%" stop-color="#C8852E"/>
+      <stop offset="100%" stop-color="#955F18"/>
+    </radialGradient>
+    <filter id="softGrain" x="-15%" y="-15%" width="130%" height="130%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="11" result="n"/>
+      <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.07 0" result="grain"/>
+      <feComposite in="grain" in2="SourceGraphic" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- contact shadow -->
+  <ellipse class="layer" data-layer="0" cx="230" cy="494" rx="172" ry="14" fill="rgba(0,0,0,0.5)"/>
+
+  <!-- ===== L0 bun-bot ===== -->
+  <g class="layer" data-layer="0">
+    <path d="M 78,420
+             C 60,420 50,442 52,460
+             C 53,478 70,490 95,490
+             L 365,490
+             C 390,490 407,478 408,460
+             C 410,442 400,420 382,420
+             C 370,406 350,398 230,398
+             C 110,398 90,406 78,420 Z"
+          fill="url(#bunBotGrad)" filter="url(#softGrain)"/>
+    <path d="M 78,420 C 60,420 50,442 52,460 C 53,478 70,490 95,490"
+          fill="none" stroke="#5C300C" stroke-width="1.5" opacity="0.3"/>
+    <path d="M 382,420 C 400,420 410,442 408,460 C 407,478 390,490 365,490"
+          fill="none" stroke="#5C300C" stroke-width="1.5" opacity="0.3"/>
+  </g>
+
+  <!-- ===== L1 sauce (glistening, dripping over patty edge) ===== -->
+  <g class="layer" data-layer="1">
+    <path d="M 78,402 Q 160,385 230,389 Q 300,385 382,402 Q 374,412 230,414 Q 86,412 78,402 Z" fill="url(#sauceGrad)"/>
+    <ellipse cx="180" cy="397" rx="22" ry="3.5" fill="#E8924A" opacity="0.5"/>
+    <ellipse cx="290" cy="396" rx="18" ry="3" fill="#E8924A" opacity="0.4"/>
+    <path d="M 118,408 Q 115,422 120,433" stroke="#7E3A07" stroke-width="4.5" fill="none" stroke-linecap="round" opacity="0.85"/>
+    <path d="M 336,407 Q 341,421 335,431" stroke="#7E3A07" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.85"/>
+  </g>
+
+  <!-- ===== L2 onion (caramelized, peeking past patty) ===== -->
+  <g class="layer" data-layer="2">
+    <path d="M 80,386 Q 158,370 230,374 Q 302,370 380,386 L 376,400 Q 230,409 84,400 Z"
+          fill="url(#onionGrad)" filter="url(#softGrain)"/>
+    <path d="M 106,384 Q 230,377 354,384" stroke="#6E4310" stroke-width="1.6" fill="none" opacity="0.6"/>
+    <path d="M 128,388 Q 230,382 332,388" stroke="#6E4310" stroke-width="1.2" fill="none" opacity="0.5"/>
+    <path d="M 150,392 Q 230,387 310,392" stroke="#6E4310" stroke-width="1" fill="none" opacity="0.4"/>
+    <ellipse cx="150" cy="381" rx="11" ry="4.5" fill="#7A4A12" opacity="0.45" transform="rotate(-8 150 381)"/>
+    <ellipse cx="300" cy="382" rx="10" ry="4" fill="#7A4A12" opacity="0.45" transform="rotate(10 300 382)"/>
+    <ellipse cx="195" cy="395" rx="9" ry="3.5" fill="#E8B255" opacity="0.5" transform="rotate(5 195 395)"/>
+    <ellipse cx="270" cy="396" rx="8" ry="3" fill="#E8B255" opacity="0.45" transform="rotate(-6 270 396)"/>
+  </g>
+
+  <!-- ===== L3 patty1 (smashed, irregular, charred edge) ===== -->
+  <g class="layer" data-layer="3">
+    <path d="M 70,378 Q 58,362 78,353 Q 104,342 162,345 Q 230,340 306,345
+             Q 364,342 388,354 Q 404,362 392,378
+             Q 400,389 380,393 Q 230,400 80,393 Q 62,389 70,378 Z"
+          fill="url(#pattyGrad)" filter="url(#softGrain)"/>
+    <path d="M 88,358 Q 144,348 196,351 M 250,348 Q 308,346 360,357"
+          stroke="#85543353" stroke-width="2.5" fill="none" opacity="0.5"/>
+    <circle cx="82" cy="375" r="3.4" fill="#150A04" opacity="0.75"/>
+    <circle cx="382" cy="369" r="2.8" fill="#150A04" opacity="0.7"/>
+    <circle cx="122" cy="390" r="2.3" fill="#150A04" opacity="0.55"/>
+    <circle cx="320" cy="391" r="2.7" fill="#150A04" opacity="0.55"/>
+    <circle cx="230" cy="395" r="2" fill="#150A04" opacity="0.45"/>
+  </g>
+
+  <!-- ===== L4 cheese1 (melted cheddar, drips below patty) ===== -->
+  <g class="layer" data-layer="4">
+    <path d="M 74,352 Q 65,340 88,335 Q 230,326 372,335 Q 395,340 386,352
+             Q 393,360 376,366 L 84,366 Q 67,360 74,352 Z" fill="url(#cheeseGrad)"/>
+    <path d="M 96,361 Q 90,380 98,398 Q 104,380 101,363" fill="#F5C030"/>
+    <path d="M 360,358 Q 368,376 360,393 Q 353,376 356,360" fill="#F5C030"/>
+    <path d="M 230,363 Q 225,375 232,387" stroke="#F0A91E" stroke-width="6.5" fill="none" stroke-linecap="round"/>
+    <path d="M 150,364 Q 146,374 151,384" stroke="#F0A91E" stroke-width="4.5" fill="none" stroke-linecap="round" opacity="0.85"/>
+  </g>
+
+  <!-- ===== L5 patty2 ===== -->
+  <g class="layer" data-layer="5">
+    <path d="M 72,332 Q 60,316 80,307 Q 106,296 164,299 Q 230,294 304,299
+             Q 360,296 386,308 Q 400,316 390,332
+             Q 397,343 378,347 Q 230,353 82,347 Q 64,343 72,332 Z"
+          fill="url(#pattyGrad)" filter="url(#softGrain)"/>
+    <path d="M 90,312 Q 146,303 198,306 M 252,302 Q 304,300 354,311"
+          stroke="#85543353" stroke-width="2.5" fill="none" opacity="0.5"/>
+    <circle cx="86" cy="330" r="3.2" fill="#150A04" opacity="0.7"/>
+    <circle cx="376" cy="323" r="2.7" fill="#150A04" opacity="0.65"/>
+    <circle cx="140" cy="345" r="2" fill="#150A04" opacity="0.5"/>
+  </g>
+
+  <!-- ===== L6 cheese2 (smoked scamorza, lighter melt) ===== -->
+  <g class="layer" data-layer="6">
+    <path d="M 80,306 Q 71,295 94,291 Q 230,283 366,291 Q 389,295 380,306
+             Q 387,313 372,318 L 88,318 Q 73,313 80,306 Z" fill="url(#cheese2Grad)"/>
+    <path d="M 104,315 Q 99,328 106,340" stroke="#CC9116" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.8"/>
+    <path d="M 348,313 Q 354,325 347,336" stroke="#CC9116" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.8"/>
+  </g>
+
+  <!-- ===== L7 lettuce (ruffled, widest layer — peeks well past bun) ===== -->
+  <g class="layer" data-layer="7" filter="url(#softGrain)">
+    <path d="M 38,288
+             Q 57,260 78,282 Q 98,256 120,280 Q 142,254 164,279
+             Q 186,253 209,278 Q 230,253 251,278 Q 274,253 296,279
+             Q 318,254 340,280 Q 362,256 384,282 Q 403,260 422,288
+             L 416,306 Q 230,320 44,306 Z" fill="url(#lettuceGrad)"/>
+    <path d="M 70,278 Q 90,268 96,283 M 155,275 Q 175,266 181,281 M 260,275 Q 280,266 286,281 M 350,278 Q 370,268 376,283"
+          stroke="#386A14" stroke-width="1.5" fill="none" opacity="0.65"/>
+    <path d="M 105,296 L 355,296" stroke="#fff" stroke-width="0.5" opacity="0.08"/>
+  </g>
+
+
+  <!-- ===== L8 bun-top (crown, sesame seeds) ===== -->
+  <g class="layer" data-layer="8">
+    <path d="M 36,274
+             C 24,194 70,148 132,124
+             C 168,108 192,102 230,102
+             C 268,102 292,108 328,124
+             C 390,148 436,194 424,274
+             C 424,284 422,288 230,288
+             C 38,288 36,284 36,274 Z"
+          fill="url(#bunTopGrad)" filter="url(#softGrain)"/>
+    <path d="M 96,168 Q 150,128 218,116" stroke="#F2C481" stroke-width="16" fill="none" opacity="0.25" stroke-linecap="round"/>
+    <g fill="url(#seedGrad)">
+      <ellipse cx="132" cy="178" rx="6.5" ry="3.2" transform="rotate(-20 132 178)"/>
+      <ellipse cx="170" cy="155" rx="6" ry="3" transform="rotate(15 170 155)"/>
+      <ellipse cx="208" cy="140" rx="6.5" ry="3.2" transform="rotate(-10 208 140)"/>
+      <ellipse cx="252" cy="138" rx="6" ry="3" transform="rotate(25 252 138)"/>
+      <ellipse cx="292" cy="148" rx="6.5" ry="3.2" transform="rotate(-15 292 148)"/>
+      <ellipse cx="328" cy="170" rx="6" ry="3" transform="rotate(20 328 170)"/>
+      <ellipse cx="158" cy="208" rx="6.5" ry="3.2" transform="rotate(8 158 208)"/>
+      <ellipse cx="198" cy="192" rx="6" ry="3" transform="rotate(-25 198 192)"/>
+      <ellipse cx="242" cy="189" rx="6.5" ry="3.2" transform="rotate(12 242 189)"/>
+      <ellipse cx="282" cy="197" rx="6" ry="3" transform="rotate(-18 282 197)"/>
+      <ellipse cx="316" cy="216" rx="6.5" ry="3.2" transform="rotate(22 316 216)"/>
+      <ellipse cx="116" cy="232" rx="6" ry="3" transform="rotate(-12 116 232)"/>
+      <ellipse cx="156" cy="248" rx="6.5" ry="3.2" transform="rotate(18 156 248)"/>
+      <ellipse cx="204" cy="237" rx="6" ry="3" transform="rotate(-8 204 237)"/>
+      <ellipse cx="252" cy="240" rx="6.5" ry="3.2" transform="rotate(14 252 240)"/>
+      <ellipse cx="292" cy="248" rx="6" ry="3" transform="rotate(-20 292 248)"/>
+      <ellipse cx="334" cy="236" rx="6.5" ry="3.2" transform="rotate(10 334 236)"/>
+      <ellipse cx="364" cy="213" rx="6" ry="3" transform="rotate(-16 364 213)"/>
+      <ellipse cx="182" cy="222" rx="6" ry="2.9" transform="rotate(6 182 222)"/>
+      <ellipse cx="226" cy="206" rx="6.5" ry="3.2" transform="rotate(-14 226 206)"/>
+      <ellipse cx="272" cy="211" rx="6" ry="2.9" transform="rotate(16 272 211)"/>
+      <ellipse cx="142" cy="262" rx="6" ry="2.9" transform="rotate(-10 142 262)"/>
+      <ellipse cx="312" cy="263" rx="6" ry="2.9" transform="rotate(12 312 263)"/>
+    </g>
+  </g>
+  `;
+
+  const layerEls = Array.from(svg.querySelectorAll('.layer'));
+
+  layerEls.forEach((el) => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(40px) scale(0.85)';
+    el.style.transformOrigin = '230px 488px';
+    el.style.transition = 'transform 0.5s cubic-bezier(.4,0,.2,1), opacity 0.5s ease';
+  });
+
+  let lastVisible = -1;
+
+  function onScroll() {
+    const section = document.getElementById('burger-builder');
+    const rect = section.getBoundingClientRect();
+    const sectionH = section.offsetHeight - window.innerHeight;
+    const scrolled = -rect.top;
+    const progress = Math.max(0, Math.min(1, scrolled / sectionH));
+
+    const totalLayers = layerEls.length;
+    const visibleCount = Math.floor(progress * (totalLayers + 1));
+
+    layerEls.forEach((el, i) => {
+      if (i < visibleCount) {
+        el.style.opacity = '1';
+        el.style.transform = 'translateY(0px) scale(1)';
+      } else {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(40px) scale(0.85)';
+      }
+    });
+
+    const titleIdx = Math.min(visibleCount, titles.length - 1);
+    if (titleIdx !== lastVisible) {
+      titleEl.style.opacity = '0';
+      setTimeout(() => {
+        titleEl.textContent = titles[titleIdx];
+        titleEl.style.opacity = '1';
+        titleEl.style.transition = 'opacity 0.3s';
+      }, 150);
+      lastVisible = titleIdx;
+    }
+
+    hintEl.style.opacity = progress < 0.95 ? '1' : '0';
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+
+
+// ===== MENU DATA =====
+const menuData = {
+  it: {
+    burgers: [
+      {
+        name: 'Cheeseburger', price: '€5.90',
+        desc: 'Carne, double cheddar, salsa Burgegnere',
+        tags: ['G','L'],
+      },
+      {
+        name: 'Classico', price: '€4.90',
+        desc: 'Carne, pomodoro, insalata, salsa Burgegnere',
+        tags: ['G'],
+      },
+      {
+        name: 'Vegetariano', price: '€7.50',
+        desc: 'Polpetta vegetale, cipolla caramellata, insalata, pomodoro, salsa Burgegnere',
+        tags: ['G','L','U'],
+      },
+    ],
+    speciali: [
+      {
+        name: 'BBQ', price: '€8.00',
+        desc: 'Carne, cheddar, scamorza affumicata, bacon, cipolla caramellata, salsa BBQ',
+        tags: ['G','L'],
+        star: true,
+      },
+      {
+        name: 'Jalapenos', price: '€8.00',
+        desc: 'Carne, double cheddar, cetriolini, jalapeño piccante, tacchino arrosto, honey mayo',
+        tags: ['G','L','U'],
+        star: true,
+      },
+      {
+        name: 'Blue cheese', price: '€7.50',
+        desc: 'Carne, crema gorgonzola DOP, noci tritate, honey mayo',
+        tags: ['G','L','FG'],
+        star: true,
+      },
+      {
+        name: 'Chicken', price: '€5.90',
+        desc: 'Petto di pollo, insalata, maionese',
+        tags: ['G','L','U'],
+      },
+    ],
+    fries: [
+      { name: 'French Fries', price: '€3.50', desc: '', tags: [] },
+      { name: 'Sweet Potato Fries', price: '€4.50', desc: '', tags: [] },
+      { name: 'Cheese Sticks', price: '€4.50', desc: 'Porzione da 5 pezzi', tags: ['G','L'] },
+      { name: 'Cheese Fries', price: '€5.00', desc: '', tags: ['L'] },
+    ],
+    extra: [
+      { name: 'Bacon', price: '€1.00' },
+      { name: 'Funghi', price: '€1.90' },
+      { name: 'Fetta cheddar', price: '€0.70' },
+      { name: 'Fetta scamorza', price: '€0.70' },
+      { name: 'Cipolla caramellata', price: '€0.80' },
+      { name: 'Jalapeños', price: '€0.90' },
+      { name: 'Insalata', price: '€0.40' },
+      { name: 'Pomodoro', price: '€0.40' },
+      { name: 'Cipolla fresca', price: '€0.40' },
+    ],
+    drinks: [
+      { name: 'Lattina 33cl', price: '€2.70', desc: 'Coca Cola, Fanta, Sprite, Iced Tea', tags: [] },
+      { name: 'Lurisia', price: '€3.20', desc: '', tags: [] },
+      { name: 'Chinotto / Gazzosa', price: '', desc: '', tags: [] },
+      { name: 'Aranciata / Rosa', price: '', desc: '', tags: [] },
+      { name: 'Limonata', price: '', desc: '', tags: [] },
+      { name: 'Succo di frutta', price: '€2.70', desc: '', tags: [] },
+      { name: 'Acqua (naturale/frizzante)', price: '€1.50', desc: '', tags: [] },
+    ],
+    sauces: [
+      { name: 'Salsa Burgegnere', price: '€0.70' },
+      { name: 'Calabrian Hot Sauce', price: '€0.90' },
+      { name: 'Salsa BBQ', price: '€0.30' },
+      { name: 'Honey Mayonnaise', price: '€0.50' },
+      { name: 'Ketchup', price: '€0.30' },
+      { name: 'Maionese', price: '€0.30' },
+      { name: 'Senape', price: '€0.30' },
+    ],
+    desserts: [
+      { name: 'Tiramisù', price: '€3.90', desc: '', tags: ['G','L','U'] },
+    ],
+    salad: [
+      { name: 'Insalata', price: '€5.90', desc: 'Carne o Pollo, insalata verde e rossa, carote, rucola, spinaci baby, salsa yogurt', tags: ['L'] },
+    ],
+  },
+  en: {
+    burgers: [
+      { name: 'Cheeseburger', price: '€5.90', desc: 'Beef, double cheddar, Burgegnere sauce', tags: ['G','L'] },
+      { name: 'Classic', price: '€4.90', desc: 'Beef, tomato, lettuce, Burgegnere sauce', tags: ['G'] },
+      { name: 'Vegetarian', price: '€7.50', desc: 'Fresh vegetable patty, caramelized onion, lettuce, tomato, Burgegnere sauce', tags: ['G','L','U'] },
+    ],
+    speciali: [
+      { name: 'BBQ', price: '€8.00', desc: 'Beef, cheddar, smoked scamorza, bacon, caramelized onion, BBQ sauce', tags: ['G','L'], star: true },
+      { name: 'Jalapenos', price: '€8.00', desc: 'Beef, double cheddar, pickles, spicy jalapeño, roasted turkey, honey mayo', tags: ['G','L','U'], star: true },
+      { name: 'Blue Cheese', price: '€7.50', desc: 'Beef, gorgonzola DOP cream, chopped walnuts, honey mayo', tags: ['G','L','FG'], star: true },
+      { name: 'Chicken', price: '€5.90', desc: 'Real chicken cutlet, salad, mayonnaise', tags: ['G','L','U'] },
+    ],
+    fries: [
+      { name: 'French Fries', price: '€3.50', desc: '', tags: [] },
+      { name: 'Sweet Potato Fries', price: '€4.50', desc: '', tags: [] },
+      { name: 'Cheese Sticks', price: '€4.50', desc: 'Portion of 5 pieces', tags: ['G','L'] },
+      { name: 'Cheese Fries', price: '€5.00', desc: '', tags: ['L'] },
+    ],
+    extra: [
+      { name: 'Bacon', price: '€1.00' }, { name: 'Mushrooms', price: '€1.90' },
+      { name: 'Cheddar slice', price: '€0.70' }, { name: 'Smoked scamorza', price: '€0.70' },
+      { name: 'Caramelized onion', price: '€0.80' }, { name: 'Jalapeños', price: '€0.90' },
+      { name: 'Lettuce', price: '€0.40' }, { name: 'Tomatoes', price: '€0.40' }, { name: 'Fresh onion', price: '€0.40' },
+    ],
+    drinks: [
+      { name: 'Can 33cl', price: '€2.70', desc: 'Coca Cola, Fanta, Sprite, Iced Tea', tags: [] },
+      { name: 'Lurisia', price: '€3.20', desc: '', tags: [] },
+      { name: 'Chinotto / Soda', price: '', desc: '', tags: [] },
+      { name: 'Orange / Pink Lemonade', price: '', desc: '', tags: [] },
+      { name: 'Fruit juice', price: '€2.70', desc: '', tags: [] },
+      { name: 'Water (Still/Sparkling)', price: '€1.50', desc: '', tags: [] },
+    ],
+    sauces: [
+      { name: 'Burgegnere Sauce', price: '€0.70' }, { name: 'Calabrian Hot Sauce', price: '€0.90' },
+      { name: 'BBQ Sauce', price: '€0.30' }, { name: 'Honey Mayonnaise', price: '€0.50' },
+      { name: 'Ketchup', price: '€0.30' }, { name: 'Mayonnaise', price: '€0.30' }, { name: 'Mustard', price: '€0.30' },
+    ],
+    desserts: [{ name: 'Tiramisù', price: '€3.90', desc: '', tags: ['G','L','U'] }],
+    salad: [{ name: 'Salad', price: '€5.90', desc: 'Meat or Chicken, green & red lettuce, carrots, arugula, baby spinach, yogurt sauce', tags: ['L'] }],
+  },
+  fr: {
+    burgers: [
+      { name: 'Cheeseburger', price: '€5.90', desc: 'Bœuf, double cheddar, sauce Burgegnere', tags: ['G','L'] },
+      { name: 'Classique', price: '€4.90', desc: 'Bœuf, tomate, salade, sauce Burgegnere', tags: ['G'] },
+      { name: 'Végétarien', price: '€7.50', desc: 'Galette végétale, oignon caramélisé, salade, tomate, sauce Burgegnere', tags: ['G','L','U'] },
+    ],
+    speciali: [
+      { name: 'BBQ', price: '€8.00', desc: 'Bœuf, cheddar, scamorza fumée, bacon, oignon caramélisé, sauce BBQ', tags: ['G','L'], star: true },
+      { name: 'Jalapeños', price: '€8.00', desc: 'Bœuf, double cheddar, cornichons, jalapeño piquant, dinde rôtie, mayo miel', tags: ['G','L','U'], star: true },
+      { name: 'Blue Cheese', price: '€7.50', desc: 'Bœuf, crème gorgonzola DOP, noix hachées, mayo miel', tags: ['G','L','FG'], star: true },
+      { name: 'Poulet', price: '€5.90', desc: 'Escalope de poulet, salade, mayonnaise', tags: ['G','L','U'] },
+    ],
+    fries: [
+      { name: 'Frites', price: '€3.50', desc: '', tags: [] },
+      { name: 'Frites de patate douce', price: '€4.50', desc: '', tags: [] },
+      { name: 'Bâtonnets de fromage', price: '€4.50', desc: 'Portion de 5 pièces', tags: ['G','L'] },
+      { name: 'Cheese Fries', price: '€5.00', desc: '', tags: ['L'] },
+    ],
+    extra: [
+      { name: 'Bacon', price: '€1.00' }, { name: 'Champignons', price: '€1.90' },
+      { name: 'Tranche cheddar', price: '€0.70' }, { name: 'Scamorza fumée', price: '€0.70' },
+      { name: 'Oignon caramélisé', price: '€0.80' }, { name: 'Jalapeños', price: '€0.90' },
+      { name: 'Salade', price: '€0.40' }, { name: 'Tomates', price: '€0.40' }, { name: 'Oignon frais', price: '€0.40' },
+    ],
+    drinks: [
+      { name: 'Canette 33cl', price: '€2.70', desc: 'Coca Cola, Fanta, Sprite, Iced Tea', tags: [] },
+      { name: 'Lurisia', price: '€3.20', desc: '', tags: [] },
+      { name: 'Eau (plate/gazeuse)', price: '€1.50', desc: '', tags: [] },
+      { name: 'Jus de fruit', price: '€2.70', desc: '', tags: [] },
+    ],
+    sauces: [
+      { name: 'Sauce Burgegnere', price: '€0.70' }, { name: 'Sauce piquante Calabraise', price: '€0.90' },
+      { name: 'Sauce BBQ', price: '€0.30' }, { name: 'Mayo miel', price: '€0.50' },
+      { name: 'Ketchup', price: '€0.30' }, { name: 'Mayonnaise', price: '€0.30' }, { name: 'Moutarde', price: '€0.30' },
+    ],
+    desserts: [{ name: 'Tiramisù', price: '€3.90', desc: '', tags: ['G','L','U'] }],
+    salad: [{ name: 'Salade', price: '€5.90', desc: 'Viande ou Poulet, laitues, carottes, roquette, épinards, sauce yaourt', tags: ['L'] }],
+  }
+};
+
+const labels = {
+  it: { burgers:'Burgers', speciali:'Speciali', fries:'Fries', drinks:'Drinks', sauces:'Salse', desserts:'Dessert', salad:'Insalata', extra:'Extra', combo:'COMBO', comboIncludes:['Fries','Drink'], doubleLabel:'DOUBLE MEAT', doubleSub:'2× Carne + €2.50', comboPrice:'+€4.50' },
+  en: { burgers:'Burgers', speciali:'Specials', fries:'Fries', drinks:'Drinks', sauces:'Sauces', desserts:'Desserts', salad:'Salad', extra:'Extra', combo:'COMBO', comboIncludes:['Fries','Drink'], doubleLabel:'DOUBLE MEAT', doubleSub:'2× Meat + €2.50', comboPrice:'+€4.50' },
+  fr: { burgers:'Burgers', speciali:'Spéciaux', fries:'Frites', drinks:'Boissons', sauces:'Sauces', desserts:'Desserts', salad:'Salade', extra:'Extra', combo:'COMBO', comboIncludes:['Frites','Boisson'], doubleLabel:'DOUBLE VIANDE', doubleSub:'2× Viande + €2.50', comboPrice:'+€4.50' },
+};
+
+const tagColors = { G:'tag-g', L:'tag-l', U:'tag-u', S:'tag-s', M:'tag-m', FG:'tag-fp' };
+
+function renderItem(item) {
+  const tags = (item.tags||[]).map(t => `<span class="tag ${tagColors[t]||''}">${t}</span>`).join('');
+  return `
+    <div class="menu-item ${item.star ? 'star-item' : ''}">
+      <div class="menu-item-row">
+        <span class="menu-item-name">${item.name}</span>
+        ${item.price ? `<span class="menu-item-price">${item.price}</span>` : ''}
+      </div>
+      ${item.desc ? `<div class="menu-item-desc">${item.desc}</div>` : ''}
+      ${tags ? `<div class="menu-item-tags">${tags}</div>` : ''}
+    </div>`;
+}
+
+function renderMenu(lang) {
+  const d = menuData[lang];
+  const l = labels[lang];
+  const grid = document.getElementById('menuGrid');
+
+  grid.innerHTML = `
+    <!-- Col 1: Burgers -->
+    <div>
+      <div class="menu-cat-title">${l.burgers}</div>
+      ${d.burgers.map(renderItem).join('')}
+      <div style="margin-top:24px">
+        <div class="menu-cat-title">${l.speciali}</div>
+        ${d.speciali.map(renderItem).join('')}
+      </div>
+    </div>
+
+    <!-- Col 2: Fries + Drinks + Sauces -->
+    <div>
+      <div class="menu-cat-title white">${l.fries}</div>
+      ${d.fries.map(renderItem).join('')}
+
+      <div style="margin-top:24px">
+        <div class="menu-cat-title white">${l.desserts}</div>
+        ${d.desserts.map(renderItem).join('')}
+      </div>
+
+      <div style="margin-top:24px">
+        <div class="menu-cat-title white">${l.salad}</div>
+        ${d.salad.map(renderItem).join('')}
+      </div>
+
+      <div style="margin-top:24px">
+        <div class="menu-cat-title white">${l.drinks}</div>
+        ${d.drinks.map(renderItem).join('')}
+      </div>
+    </div>
+
+    <!-- Combo box full width -->
+    <div class="combo-box full-width">
+      <div class="combo-item">
+        <div class="combo-label">${l.combo}</div>
+        <div class="combo-sub">Burger + ${l.comboIncludes.join(' + ')}</div>
+      </div>
+      <div class="combo-includes">
+        ${l.comboIncludes.map(c => `<span>${c}</span>`).join('')}
+      </div>
+      <div class="combo-item">
+        <div class="combo-label" style="font-size:2.5rem">${l.comboPrice}</div>
+      </div>
+      <div class="combo-item" style="border-left:1px dashed rgba(242,239,229,0.15); padding-left:32px">
+        <div class="combo-label">${l.doubleLabel}</div>
+        <div class="combo-sub">${l.doubleSub}</div>
+      </div>
+    </div>
+
+    <!-- Sauces & Extra -->
+    <div>
+      <div class="menu-cat-title white">${l.sauces}</div>
+      ${d.sauces.map(renderItem).join('')}
+    </div>
+    <div>
+      <div class="menu-cat-title white">${l.extra}</div>
+      ${d.extra.map(renderItem).join('')}
+    </div>
+  `;
+}
+
+function switchLang(lang) {
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  renderMenu(lang);
+}
+
+// Initial render
+renderMenu('it');
+
+function toggleMobileMenu() {
+  const links = document.querySelector('.nav-links');
+  if (links.style.display === 'flex') {
+    links.style.display = 'none';
+  } else {
+    links.style.cssText = 'display:flex; flex-direction:column; position:fixed; top:60px; left:0; right:0; background:rgba(26,26,24,0.98); padding:24px; gap:20px; z-index:99;';
+  }
+}
+</script>
+</body>
+</html>
