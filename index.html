@@ -558,14 +558,16 @@
     border: 1px dashed var(--chalk-faint);
     border-radius: 2px;
   }
-  .allergen-item {
+.allergen-key {
     display: flex;
-    align-items: center;
-    gap: 6px;
-    font-family: 'Inter', sans-serif;
-    font-size: 0.72rem;
-    color: var(--chalk-dim);
-  }
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 40px;
+    padding: 20px;
+    border: 1px dashed var(--chalk-faint);
+    border-radius: 2px;
+}
 
   /* COMBO BOX */
   .combo-box {
@@ -910,6 +912,14 @@
     transition: color 0.2s;
   }
   .pdf-link:hover { color: var(--chalk-white); }
+  .tag-icon {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    vertical-align: middle;
+    filter: brightness(1.1); /* makes icons chalk-white to match the aesthetic */
+    opacity: 0.85;
+  }
 </style>
 </head>
 <body>
@@ -1011,13 +1021,15 @@
   </div>
 
   <!-- Allergen key -->
-  <div class="allergen-key" style="margin-top:40px">
-    <div class="allergen-item"><span class="tag tag-g">G</span> Glutine</div>
-    <div class="allergen-item"><span class="tag tag-l">L</span> Latte</div>
-    <div class="allergen-item"><span class="tag tag-u">U</span> Uova</div>
-    <div class="allergen-item"><span class="tag tag-s">S</span> Sedano</div>
-    <div class="allergen-item"><span class="tag tag-m">M</span> Senape</div>
-    <div class="allergen-item"><span class="tag tag-fp">FG</span> Frutta a guscio</div>
+  <div class="allergen-key" style="margin-top:40px center;">
+    <!-- NEW -->
+    <div class="allergen-item"><img class="tag-icon" src="assets/menu-icons/glutine.png" alt="G"> Glutine</div>
+    <div class="allergen-item"><img class="tag-icon" src="assets/menu-icons/uova.png" alt="U"> Uova</div>
+    <div class="allergen-item"><img class="tag-icon" src="assets/menu-icons/latte.png" alt="L"> Latte</div>
+    <div class="allergen-item"><img class="tag-icon" src="assets/menu-icons/senape.png" alt="M"> Senape</div>
+    <div class="allergen-item"><img class="tag-icon" src="assets/menu-icons/sedano.png" alt="S"> Sedano</div>
+    <div class="allergen-item"><img class="tag-icon" src="assets/menu-icons/soia.png" alt="SO"> Soia</div>
+    <div class="allergen-item"><img class="tag-icon" src="assets/menu-icons/frutta a guscio.png" alt="FG"> Frutta a guscio</div>
   </div>
 
   <!-- PDF backup -->
@@ -1481,49 +1493,49 @@ const menuData = {
       {
         name: 'Cheeseburger', price: '€5.90',
         desc: 'Carne, double cheddar, salsa Burgegnere',
-        tags: ['G','L'],
+        tags: ['G','U','L','M'],
       },
       {
         name: 'Classico', price: '€4.90',
         desc: 'Carne, pomodoro, insalata, salsa Burgegnere',
-        tags: ['G'],
+        tags: ['G','U','L','M'],
       },
       {
         name: 'Vegetariano', price: '€7.50',
         desc: 'Polpetta vegetale, cipolla caramellata, insalata, pomodoro, salsa Burgegnere',
-        tags: ['G','L','U'],
+        tags: ['G','U','L','M','S','SO'],
       },
     ],
     speciali: [
       {
         name: 'BBQ', price: '€8.00',
         desc: 'Carne, cheddar, scamorza affumicata, bacon, cipolla caramellata, salsa BBQ',
-        tags: ['G','L'],
+        tags: ['G','U','L'],
         star: true,
       },
       {
         name: 'Jalapenos', price: '€8.00',
         desc: 'Carne, double cheddar, cetriolini, jalapeño piccante, tacchino arrosto, honey mayo',
-        tags: ['G','L','U'],
+        tags: ['G','U','L','M'],
         star: true,
       },
       {
         name: 'Blue cheese', price: '€7.50',
         desc: 'Carne, crema gorgonzola DOP, noci tritate, honey mayo',
-        tags: ['G','L','FG'],
+        tags: ['G','U','L','M','FG'],
         star: true,
       },
       {
         name: 'Chicken', price: '€5.90',
         desc: 'Petto di pollo, insalata, maionese',
-        tags: ['G','L','U'],
+        tags: ['G','U','L','M'],
       },
     ],
     fries: [
       { name: 'French Fries', price: '€3.50', desc: '', tags: [] },
       { name: 'Sweet Potato Fries', price: '€4.50', desc: '', tags: [] },
-      { name: 'Cheese Sticks', price: '€4.50', desc: 'Porzione da 5 pezzi', tags: ['G','L'] },
-      { name: 'Cheese Fries', price: '€5.00', desc: '', tags: ['L'] },
+      { name: 'Cheese Sticks', price: '€4.50', desc: 'Porzione da 5 pezzi', tags: [] },
+      { name: 'Cheese Fries', price: '€5.00', desc: '', tags: ['G','U','L'] },
     ],
     extra: [
       { name: 'Bacon', price: '€1.00' },
@@ -1552,13 +1564,13 @@ const menuData = {
       { name: 'Honey Mayonnaise', price: '€0.50' },
       { name: 'Ketchup', price: '€0.30' },
       { name: 'Maionese', price: '€0.30' },
-      { name: 'Senape', price: '€0.30' },
+      { name: 'Senape', price: '€0.30', 'tags': ['G','U','L','M'] },
     ],
     desserts: [
-      { name: 'Tiramisù', price: '€3.90', desc: '', tags: ['G','L','U'] },
+      { name: 'Tiramisù', price: '€3.90', desc: '', tags: ['G','U','L'] },
     ],
     salad: [
-      { name: 'Insalata', price: '€5.90', desc: 'Carne o Pollo, insalata verde e rossa, carote, rucola, spinaci baby, salsa yogurt', tags: ['L'] },
+      { name: 'Insalata', price: '€5.90', desc: 'Carne o Pollo, insalata verde e rossa, carote, rucola, spinaci baby, salsa yogurt', tags: ['U','L','M'] },
     ],
   },
   en: {
@@ -1647,10 +1659,18 @@ const labels = {
   fr: { burgers:'Burgers', speciali:'Spéciaux', fries:'Frites', drinks:'Boissons', sauces:'Sauces', desserts:'Desserts', salad:'Salade', extra:'Extra', combo:'COMBO', comboIncludes:['Frites','Boisson'], doubleLabel:'DOUBLE VIANDE', doubleSub:'2× Viande + €2.50', comboPrice:'+€4.50' },
 };
 
-const tagColors = { G:'tag-g', L:'tag-l', U:'tag-u', S:'tag-s', M:'tag-m', FG:'tag-fp' };
+const tagIcons = {
+  G:  'assets/menu-icons/glutine.png',
+  L:  'assets/menu-icons/latte.png',
+  U:  'assets/menu-icons/uova.png',
+  S:  'assets/menu-icons/sedano.png',
+  M:  'assets/menu-icons/senape.png',
+  FG: 'assets/menu-icons/frutta a guscio.png',
+  SO: 'assets/menu-icons/soia.png',
+};
 
 function renderItem(item) {
-  const tags = (item.tags||[]).map(t => `<span class="tag ${tagColors[t]||''}">${t}</span>`).join('');
+  const tags = (item.tags||[]).map(t => `<img class="tag-icon" src="${tagIcons[t]}" alt="${t}" title="${t}">`).join('');
   return `
     <div class="menu-item ${item.star ? 'star-item' : ''}">
       <div class="menu-item-row">
