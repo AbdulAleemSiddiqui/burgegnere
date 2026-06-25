@@ -1021,8 +1021,7 @@
   </div>
 
   <!-- Allergen key -->
-  <div class="allergen-key" style="margin-top:40px center;">
-    <!-- NEW -->
+  <!-- <div class="allergen-key" style="margin-top:40px center;">
     <div class="allergen-item"><img class="tag-icon" src="assets/menu-icons/glutine.png" alt="G"> Glutine</div>
     <div class="allergen-item"><img class="tag-icon" src="assets/menu-icons/uova.png" alt="U"> Uova</div>
     <div class="allergen-item"><img class="tag-icon" src="assets/menu-icons/latte.png" alt="L"> Latte</div>
@@ -1030,6 +1029,10 @@
     <div class="allergen-item"><img class="tag-icon" src="assets/menu-icons/sedano.png" alt="S"> Sedano</div>
     <div class="allergen-item"><img class="tag-icon" src="assets/menu-icons/soia.png" alt="SO"> Soia</div>
     <div class="allergen-item"><img class="tag-icon" src="assets/menu-icons/frutta a guscio.png" alt="FG"> Frutta a guscio</div>
+  </div> -->
+
+  <div class="allergen-key" id="allergenKey" style="margin-top:40px center;">
+  <!-- Rendered by JS via renderAllergens() -->
   </div>
 
   <!-- PDF backup -->
@@ -1669,6 +1672,21 @@ const tagIcons = {
   SO: 'assets/menu-icons/soia.png',
 };
 
+const allergenNames = {
+  it: { G:'Glutine', U:'Uova', L:'Latte', M:'Senape', S:'Sedano', SO:'Soia', FG:'Frutta a guscio' },
+  en: { G:'Gluten',  U:'Eggs', L:'Milk',  M:'Mustard', S:'Celery', SO:'Soy', FG:'Tree nuts' },
+  fr: { G:'Gluten',  U:'Œufs', L:'Lait',  M:'Moutarde', S:'Céleri', SO:'Soja', FG:'Fruits à coque' },
+};
+
+function renderAllergens(lang) {
+  const a = allergenNames[lang];
+  const key = document.getElementById('allergenKey');
+  if (!key) return;
+  key.innerHTML = Object.keys(tagIcons).map(code => `
+    <div class="allergen-item"><img class="tag-icon" src="${tagIcons[code]}" alt="${code}"> ${a[code]}</div>
+  `).join('');
+}
+
 function renderItem(item) {
   const tags = (item.tags||[]).map(t => `<img class="tag-icon" src="${tagIcons[t]}" alt="${t}" title="${t}">`).join('');
   return `
@@ -1753,10 +1771,12 @@ function switchLang(lang) {
   document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
   event.target.classList.add('active');
   renderMenu(lang);
+  renderAllergens(lang);
 }
 
 // Initial render
 renderMenu('it');
+renderAllergens('it');
 
 function toggleMobileMenu() {
   const links = document.querySelector('.nav-links');
