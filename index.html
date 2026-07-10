@@ -9,7 +9,48 @@
 <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Caveat:wght@400;600;700&family=Special+Elite&family=Luckiest+Guy&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="assets/logo-without-background.png">
 <style>
+  /* ===== CUSTOM FONTS =====
+     Intro Script   -> main titles (Light 300 / Bold 700)
+     Blenda Script  -> secondary text
+     Noteworthy     -> 3D text (burger builder)
+  */
+  @font-face {
+    font-family: 'Blenda Script';
+    src: url('assets/fonts/BlendaScript.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Intro Script';
+    src: url('assets/fonts/IntroScript-Light.woff2') format('woff2'),
+         url('assets/fonts/IntroScript-Light.woff') format('woff'),
+         url('assets/fonts/IntroScript-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Intro Script';
+    src: url('assets/fonts/IntroScript-Bold.woff2') format('woff2'),
+         url('assets/fonts/IntroScript-Bold.woff') format('woff'),
+         url('assets/fonts/IntroScript-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Noteworthy';
+    src: url('assets/fonts/Noteworthy-Lt.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+
   :root {
+    --font-title: 'Intro Script', 'Luckiest Guy', cursive;
+    --font-secondary: 'Blenda Script', 'Caveat', cursive;
+    --font-3d: 'Noteworthy', 'Permanent Marker', cursive;
     --chalk-white: #F2EFE5;
     --chalk-dim: #C8C2B0;
     --chalk-faint: rgba(242,239,229,0.15);
@@ -77,7 +118,7 @@
     display: inline-flex;
     align-items: center;
     gap: 1.5px;
-    font-family: 'Luckiest Guy', cursive;
+    font-family: var(--font-title);
     font-size: 1.3rem;
     color: #ffffff;
     letter-spacing: 0.04em;
@@ -85,7 +126,7 @@
     font-weight: 300;
   }
   .nav-logo img {
-    height: 1.9rem;
+    height: 2.2rem;
     width: auto;
     display: block;
   }
@@ -96,7 +137,7 @@
     list-style: none;
   }
   .nav-links a {
-    font-family: 'Caveat', cursive;
+    font-family: var(--font-secondary);
     font-size: 1.1rem;
     color: var(--chalk-dim);
     text-decoration: none;
@@ -108,7 +149,7 @@
   .nav-order-btn {
     background: var(--gold);
     color: #111;
-    font-family: 'Caveat', cursive;
+    font-family: var(--font-secondary);
     font-size: 1rem;
     font-weight: 700;
     padding: 8px 20px;
@@ -128,7 +169,7 @@
     justify-content: center;
     overflow: hidden;
     z-index: 1;
-    background-image: url('assets/hero_bg.jpg');
+    background-image: url('assets/backgrounds/header_bg.jpg');
     background-size: cover;
     background-position: center top;
   }
@@ -137,36 +178,29 @@
   content: '';
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(
-      ellipse 65% 50% at 42% 55%,
-      rgba(10,10,9,0.95) 0%,
-      rgba(10,10,9,0.85) 35%,
-      rgba(10,10,9,0.65) 55%,
-      rgba(10,10,9,0.25) 78%,
-      transparent 100%
-    ),
-    linear-gradient(
-      to bottom,
-      rgba(10,10,9,0.55) 0%,
-      rgba(10,10,9,0.25) 20%,
-      rgba(10,10,9,0.55) 65%,
-      rgba(10,10,9,0.95) 100%
-    );
-
+  /* Background image carries the title/subtitle/tagline; only a light shade at the
+     very bottom keeps the action cluster readable, the rest stays full opacity. */
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    transparent 58%,
+    rgba(26,26,24,0.5) 80%,
+    var(--board-dark) 100%
+  );
   z-index: 1;
   pointer-events: none;
 }
 
   .hero-content {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
     text-align: center;
-    position: relative;
     z-index: 2;
-    padding: 160px 20px 60px;
+    padding: 0 20px 7vh;
   }
 
   .hero-eyebrow {
-    font-family: 'Caveat', cursive;
+    font-family: var(--font-secondary);
     font-size: 1rem;
     color: var(--chalk-dim);
     letter-spacing: 0.15em;
@@ -176,7 +210,7 @@
   }
 
   .hero-title {
-    font-family: 'Luckiest Guy', cursive;
+    font-family: var(--font-title);
     font-size: clamp(3rem, 10vw, 8rem);
     font-weight: 300;
     line-height: 0.9;
@@ -184,22 +218,16 @@
     position: relative;
     text-shadow: 0 4px 24px rgba(0,0,0,0.85), 0 2px 6px rgba(0,0,0,0.9);
   }
-  .hero-title .B-drip {
-    display: inline-block;
-    position: relative;
-    height: 1.6em;
-    width: auto;
-    vertical-align: middle;
-  }
-  .hero-title .B-drip img {
-    height: 100%;
-    width: auto;
+  .hero-title .hero-title-img {
+    width: clamp(280px, 82vw, 760px);
+    height: auto;
     display: block;
-    object-fit: contain;
+    margin: 0 auto;
+    filter: drop-shadow(0 4px 24px rgba(0,0,0,0.85));
   }
 
   .hero-sub {
-    font-family: 'Special Elite', serif;
+    font-family: var(--font-secondary);
     font-size: clamp(0.85rem, 2vw, 1.05rem);
     color: var(--chalk-dim);
     letter-spacing: 0.25em;
@@ -210,7 +238,7 @@
   }
 
   .hero-tagline {
-    font-family: 'Caveat', cursive;
+    font-family: var(--font-secondary);
     font-size: clamp(1.6rem, 4vw, 2.8rem);
     color: var(--gold);
     margin-top: 24px;
@@ -219,7 +247,7 @@
   }
 
   .hero-formula {
-    font-family: 'Caveat', cursive;
+    font-family: var(--font-secondary);
     font-size: 1rem;
     color: var(--chalk-dim);
     margin-top: 12px;
@@ -232,13 +260,13 @@
     gap: 16px;
     justify-content: center;
     flex-wrap: wrap;
-    margin-top: 40px;
+    margin-top: 16px;
   }
 
   .cta-primary {
     background: var(--gold);
     color: #111;
-    font-family: 'Caveat', cursive;
+    font-family: var(--font-secondary);
     font-size: 1.3rem;
     font-weight: 700;
     padding: 14px 36px;
@@ -253,7 +281,7 @@
   .cta-secondary {
     border: 1.5px solid var(--chalk-dim);
     color: var(--chalk-white);
-    font-family: 'Caveat', cursive;
+    font-family: var(--font-secondary);
     font-size: 1.3rem;
     padding: 14px 36px;
     border-radius: 2px;
@@ -264,7 +292,7 @@
   .cta-secondary:hover { border-color: var(--chalk-white); background: rgba(255,255,255,0.05); }
 
   .hero-location {
-    font-family: 'Caveat', cursive;
+    font-family: var(--font-secondary);
     font-size: 1rem;
     color: var(--chalk-dim);
     margin-top: 24px;
@@ -345,7 +373,7 @@
   .burger-label {
     position: absolute;
     right: -150px;
-    font-family: 'Caveat', cursive;
+    font-family: var(--font-secondary);
     font-size: 1rem;
     color: var(--chalk-dim);
     white-space: nowrap;
@@ -366,7 +394,7 @@
   .burger-scroll-hint {
     position: absolute;
     bottom: 40px;
-    font-family: 'Caveat', cursive;
+    font-family: var(--font-secondary);
     font-size: 1rem;
     color: var(--chalk-dim);
     animation: bounce 2s infinite;
@@ -382,7 +410,7 @@
   }
 
   .burger-section-title {
-    font-family: 'Permanent Marker', cursive;
+    font-family: var(--font-3d);
     font-size: clamp(1.2rem, 3vw, 2rem);
     color: var(--gold);
     text-align: center;
@@ -406,9 +434,20 @@
   #menu {
     position: relative;
     z-index: 1;
-    padding: 80px 20px;
+    padding: 80px 0;
+    /* Full-opacity menu photo; only a feathered top edge fades in from the board
+       colour so the handoff from the hero background is smooth, not a hard cut. */
+    background-image:
+      linear-gradient(to bottom, var(--board-dark) 0px, rgba(26,26,24,0) 220px),
+      url('assets/backgrounds/menu_background.jpg');
+    background-size: cover, cover;
+    background-position: center, center;
+    background-repeat: no-repeat, no-repeat;
+  }
+  .menu-inner {
     max-width: 1100px;
     margin: 0 auto;
+    padding: 0 20px;
   }
 
   .section-header {
@@ -417,7 +456,7 @@
   }
 
   .section-title {
-    font-family: 'Permanent Marker', cursive;
+    font-family: var(--font-title);
     font-size: clamp(2.5rem, 6vw, 4.5rem);
     color: var(--chalk-white);
     position: relative;
@@ -426,7 +465,7 @@
   .section-title.gold { color: var(--gold); }
 
   .section-subtitle {
-    font-family: 'Caveat', cursive;
+    font-family: var(--font-secondary);
     font-size: 1.1rem;
     color: var(--chalk-dim);
     margin-top: 8px;
@@ -440,7 +479,7 @@
     margin-bottom: 48px;
   }
   .lang-btn {
-    font-family: 'Caveat', cursive;
+    font-family: var(--font-secondary);
     font-size: 1rem;
     font-weight: 600;
     padding: 8px 24px;
@@ -469,8 +508,9 @@
   @media(max-width:760px) { .menu-grid { grid-template-columns: 1fr; } }
 
   .menu-cat-title {
-    font-family: 'Permanent Marker', cursive;
+    font-family: var(--font-title);
     font-size: 2rem;
+    font-weight: bold;
     color: var(--gold);
     margin-bottom: 20px;
     padding-bottom: 10px;
@@ -495,7 +535,7 @@
   }
 
   .menu-item-name {
-    font-family: 'Special Elite', serif;
+    font-family: var(--font-title);
     font-size: 0.95rem;
     color: var(--chalk-white);
     flex: 1;
@@ -509,7 +549,7 @@
   }
 
   .menu-item-price {
-    font-family: 'Caveat', cursive;
+    font-family: var(--font-secondary);
     font-size: 1.1rem;
     font-weight: 700;
     color: var(--gold);
@@ -517,7 +557,7 @@
   }
 
   .menu-item-desc {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-3d);
     font-size: 0.78rem;
     color: var(--chalk-dim);
     line-height: 1.5;
@@ -586,17 +626,17 @@
     text-align: center;
   }
   .combo-label {
-    font-family: 'Permanent Marker', cursive;
+    font-family: var(--font-title);
     font-size: 2rem;
     color: var(--gold);
   }
   .combo-sub {
-    font-family: 'Caveat', cursive;
+    font-family: var(--font-secondary);
     font-size: 1rem;
     color: var(--chalk-dim);
   }
   .combo-includes {
-    font-family: 'Caveat', cursive;
+    font-family: var(--font-secondary);
     font-size: 1.1rem;
     color: var(--chalk-white);
     display: flex;
@@ -640,7 +680,7 @@
     transform: translateY(-3px);
   }
   .delivery-card-name {
-    font-family: 'Caveat', cursive;
+    font-family: var(--font-secondary);
     font-size: 1.1rem;
     font-weight: 700;
     color: var(--chalk-white);
@@ -673,13 +713,13 @@
     content: '"';
     position: absolute;
     top: -10px; left: 16px;
-    font-family: 'Permanent Marker', cursive;
+    font-family: var(--font-title);
     font-size: 3rem;
     color: var(--gold);
     line-height: 1;
   }
   .review-text {
-    font-family: 'Caveat', cursive;
+    font-family: var(--font-3d);
     font-size: 1.05rem;
     color: var(--chalk-white);
     line-height: 1.5;
@@ -691,7 +731,7 @@
     margin-bottom: 6px;
   }
   .review-author {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-secondary);
     font-size: 0.75rem;
     color: var(--chalk-dim);
     opacity: 0.6;
@@ -717,7 +757,7 @@
   @media(max-width:560px) { .info-grid { grid-template-columns: 1fr; } }
 
   .info-block-title {
-    font-family: 'Caveat', cursive;
+    font-family: var(--font-secondary);
     font-size: 1rem;
     color: var(--gold);
     letter-spacing: 0.12em;
@@ -726,7 +766,7 @@
   }
 
   .info-block-content {
-    font-family: 'Special Elite', serif;
+    font-family: var(--font-3d);
     font-size: 0.9rem;
     color: var(--chalk-dim);
     line-height: 1.9;
@@ -749,7 +789,7 @@
     margin-top: 40px;
   }
   .social-link {
-    font-family: 'Caveat', cursive;
+    font-family: var(--font-secondary);
     font-size: 1.1rem;
     color: var(--chalk-dim);
     text-decoration: none;
@@ -772,13 +812,13 @@
     border-top: 1px solid var(--chalk-faint);
   }
   .footer-logo {
-    font-family: 'Permanent Marker', cursive;
+    font-family: var(--font-title);
     font-size: 2rem;
     color: var(--gold);
     margin-bottom: 8px;
   }
   .footer-sub {
-    font-family: 'Special Elite', serif;
+    font-family: var(--font-secondary);
     font-size: 0.75rem;
     color: var(--chalk-dim);
     letter-spacing: 0.2em;
@@ -793,7 +833,7 @@
     flex-wrap: wrap;
   }
   .footer-links a {
-    font-family: 'Caveat', cursive;
+    font-family: var(--font-secondary);
     font-size: 0.9rem;
     color: var(--chalk-dim);
     text-decoration: none;
@@ -810,7 +850,7 @@
     background: rgba(77,175,74,0.12);
     border: 1px solid rgba(77,175,74,0.4);
     color: #7DD87A;
-    font-family: 'Caveat', cursive;
+    font-family: var(--font-secondary);
     font-size: 1rem;
     font-weight: 700;
     padding: 6px 16px;
@@ -876,7 +916,7 @@
     z-index: 1;
   }
   .formula {
-    font-family: 'Caveat', cursive;
+    font-family: var(--font-secondary);
     font-size: clamp(1rem, 2.5vw, 1.5rem);
     color: var(--chalk-dim);
     opacity: 0.5;
@@ -904,7 +944,7 @@
     flex-wrap: wrap;
   }
   .pdf-link {
-    font-family: 'Caveat', cursive;
+    font-family: var(--font-secondary);
     font-size: 0.95rem;
     color: var(--chalk-dim);
     text-decoration: none;
@@ -935,75 +975,34 @@
 <!-- NAV -->
 <nav>
   <a href="#hero" class="nav-logo">
-    <img src="assets/logo-without-background.png" alt="Burgegnere logo">URGEGNERE
+    <img src="assets/main-title.png" alt="Burgegnere">
   </a>
   <ul class="nav-links">
-    <li><a href="#burger-builder">The Burger</a></li>
     <li><a href="#menu">Menu</a></li>
-    <li><a href="#order">Order</a></li>
+    <li><a href="#reviews">Reviews</a></li>
     <li><a href="#info">Find Us</a></li>
   </ul>
-  <a href="#order" class="nav-order-btn">Order Now →</a>
   <div class="hamburger" onclick="toggleMobileMenu()">
     <span></span><span></span><span></span>
   </div>
 </nav>
 
 <!-- ===== HERO ===== -->
+<!-- Background image already contains the title, subtitle and tagline baked in,
+     so the hero only overlays the bottom action cluster (kept off the artwork). -->
 <section id="hero">
   <div class="hero-content">
-    <div class="hero-eyebrow">Via Luccoli 5R · Genova · Halal 🥩</div>
-
-    <h1 class="hero-title">
-      <span class="B-drip"><img src="assets/logo-without-background.png" alt="Burgegnere Logo"></span>URGEGNERE
-    </h1>
-    <div class="hero-sub">La Meccanica Del Gusto</div>
-
-    <div class="hero-tagline">
-      uno Smash Burger che cambia tutto
-    </div>
-    <div class="hero-formula">
-      Carne + Calore + Scienza = Il miglior burger di Genova
-    </div>
-
-    <div class="halal-badge">
-      ✓ 100% Halal
-    </div>
-
+    <div class="halal-badge">✓ 100% Halal</div>
     <div class="hero-ctas">
       <a href="#menu" class="cta-primary">Vedi il Menu</a>
-      <a href="#order" class="cta-secondary">Ordina a Casa →</a>
     </div>
     <div class="hero-location">📍 Via Luccoli 5R, Genova Centro — a 5 min dal Porto Antico</div>
   </div>
 </section>
 
-<!-- ===== FORMULA ROW ===== -->
-<div class="formula-row">
-  <p class="formula">
-    AminoAcidi + Zuccheri Riducenti
-    <span class="highlight"> →<sub>h</sub> </span>
-    Reazione di Maillard
-    <span class="highlight"> = </span>
-    Sapore Perfetto
-  </p>
-</div>
-
-<!-- ===== 3D BURGER SCROLL BUILDER ===== -->
-<section id="burger-builder">
-  <div class="burger-sticky">
-    <div class="burger-section-title" id="burgerTitle">Scroll to build your burger</div>
-    <div class="burger-scene" id="burgerScene">
-      <!-- Layers rendered by JS as SVG shapes -->
-    </div>
-    <div class="burger-scroll-hint" id="scrollHint">
-      <span>↓ scroll</span>
-    </div>
-  </div>
-</section>
-
 <!-- ===== MENU ===== -->
 <section id="menu">
+  <div class="menu-inner">
   <div class="section-header">
     <h2 class="section-title gold">Menu</h2>
     <p class="section-subtitle">— La Meccanica Del Gusto —</p>
@@ -1040,44 +1039,14 @@
     <a href="https://drive.google.com/file/d/1XoUad8ZT9h3zBEYL3FfUbu1DeadlXFNo/view" target="_blank" class="pdf-link">📄 Download Menu EN (PDF)</a>
     <a href="https://drive.google.com/file/d/1r_i0nGInnlrNcYlbQu2TFCZ3Vq4mXyOo/view" target="_blank" class="pdf-link">📄 Télécharger Menu FR (PDF)</a>
   </div>
-</section>
-
-<!-- ===== ORDER SECTION ===== -->
-<section id="order" style="background: rgba(255,255,255,0.01); border-top: 1px solid var(--chalk-faint); border-bottom: 1px solid var(--chalk-faint);">
-  <div class="section-header">
-    <h2 class="section-title">Ordina Ora</h2>
-    <p class="section-subtitle">Consegna a domicilio o ritiro</p>
-  </div>
-
-  <div class="delivery-grid">
-    <a href="https://glovoapp.com/it/it/genova/stores/burgegnere-gen" target="_blank" class="delivery-card">
-      <span class="delivery-card-emoji">🟡</span>
-      <span class="delivery-card-name">Glovo</span>
-    </a>
-    <a href="https://deliveroo.it/it/menu/genova/genova-centro/burgegnere-via-luccoli-5r" target="_blank" class="delivery-card">
-      <span class="delivery-card-emoji">🩵</span>
-      <span class="delivery-card-name">Deliveroo</span>
-    </a>
-    <a href="https://www.tripadvisor.it/Restaurant_Review-g12130280-d33060825-Reviews-Burgegnere-San_Quirico_Province_of_Genoa_Liguria.html" target="_blank" class="delivery-card">
-      <span class="delivery-card-emoji">🟢</span>
-      <span class="delivery-card-name">TripAdvisor</span>
-    </a>
-    <a href="https://wa.me/393484197815" target="_blank" class="delivery-card">
-      <span class="delivery-card-emoji">💬</span>
-      <span class="delivery-card-name">WhatsApp</span>
-    </a>
-  </div>
-
-  <p style="font-family:'Caveat',cursive; font-size:0.9rem; color:var(--chalk-dim); margin-top:24px; opacity:0.5; text-align:center">
-    * Aggiornare il numero WhatsApp con quello reale del locale
-  </p>
+  </div><!-- /.menu-inner -->
 </section>
 
 <!-- ===== REVIEWS ===== -->
 <section id="reviews">
   <div class="section-header">
     <h2 class="section-title">Cosa dicono di noi</h2>
-    <p class="section-subtitle">★★★★★ · 4.9 su Google · 4.8 su Glovo</p>
+    <p class="section-subtitle">★★★★★ · 4.9 su Google</p>
   </div>
 
   <div class="reviews-grid">
@@ -1144,12 +1113,6 @@
     <a href="https://www.instagram.com/burgegnere/" target="_blank" class="social-link">
       📸 Instagram
     </a>
-    <a href="https://glovoapp.com/it/it/genova/stores/burgegnere-gen" target="_blank" class="social-link">
-      🟡 Glovo
-    </a>
-    <a href="https://deliveroo.it/it/menu/genova/genova-centro/burgegnere-via-luccoli-5r" target="_blank" class="social-link">
-      🩵 Deliveroo
-    </a>
     <a href="https://www.tripadvisor.it/Restaurant_Review-g12130280-d33060825-Reviews-Burgegnere" target="_blank" class="social-link">
       🟢 TripAdvisor
     </a>
@@ -1162,13 +1125,12 @@
   <div class="footer-sub">La Meccanica Del Gusto · Via Luccoli 5R · Genova</div>
   <div class="footer-links">
     <a href="#menu">Menu</a>
-    <a href="#order">Ordina</a>
     <a href="#info">Contatti</a>
     <a href="https://drive.google.com/file/d/1XoUad8ZT9h3zBEYL3FfUbu1DeadlXFNo/view" target="_blank">Menu PDF EN</a>
     <a href="https://drive.google.com/file/d/1r_i0nGInnlrNcYlbQu2TFCZ3Vq4mXyOo/view" target="_blank">Menu PDF FR</a>
   </div>
   <p style="font-family:'Inter',sans-serif;font-size:0.65rem;color:var(--chalk-dim);opacity:0.3;margin-top:20px">
-    © 2025 Burgegnere. Tutti i diritti riservati.
+    © 2027 Burgegnere. Tutti i diritti riservati.
   </p>
 </footer>
 
@@ -1221,271 +1183,6 @@ window.addEventListener('scroll', () => {
 
   window.addEventListener('resize', resize);
   resize();
-})();
-
-// ===== BURGER 3D SCROLL ANIMATION (realistic layered SVG) =====
-(function() {
-  const scene = document.getElementById('burgerScene');
-  const titleEl = document.getElementById('burgerTitle');
-  const hintEl = document.getElementById('scrollHint');
-
-  const titles = [
-    'Il tuo burger inizia qui...',
-    'La base: bun brioche tostato',
-    'La salsa segreta Burgegnere',
-    'Cipolla caramellata 🧅',
-    'Smash patty 100% manzo Halal 🥩',
-    'Double cheddar fuso 🧀',
-    'Il secondo patty — doppia soddisfazione',
-    'Scamorza affumicata 🔥',
-    'Insalata fresca, sempre',
-    '🍔 Ecco il tuo Burgegnere!'
-  ];
-
-  const svgNS = 'http://www.w3.org/2000/svg';
-  const svg = document.createElementNS(svgNS, 'svg');
-  svg.setAttribute('viewBox', '0 0 460 520');
-  svg.setAttribute('preserveAspectRatio', 'xMidYMax meet');
-  scene.appendChild(svg);
-
-  svg.innerHTML = `
-  <defs>
-    <radialGradient id="bunTopGrad" cx="36%" cy="18%" r="85%">
-      <stop offset="0%" stop-color="#E8A55A"/>
-      <stop offset="42%" stop-color="#CD7E33"/>
-      <stop offset="78%" stop-color="#A35C1D"/>
-      <stop offset="100%" stop-color="#783E0F"/>
-    </radialGradient>
-    <radialGradient id="bunBotGrad" cx="42%" cy="10%" r="95%">
-      <stop offset="0%" stop-color="#D88F44"/>
-      <stop offset="60%" stop-color="#AD6A24"/>
-      <stop offset="100%" stop-color="#7E4612"/>
-    </radialGradient>
-    <linearGradient id="pattyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#6B4128"/>
-      <stop offset="35%" stop-color="#4A2A1B"/>
-      <stop offset="100%" stop-color="#1E0F08"/>
-    </linearGradient>
-    <linearGradient id="cheeseGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#FFDB66"/>
-      <stop offset="100%" stop-color="#EFA416"/>
-    </linearGradient>
-    <linearGradient id="cheese2Grad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#F2CE74"/>
-      <stop offset="100%" stop-color="#CC9116"/>
-    </linearGradient>
-    <linearGradient id="lettuceGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#A3D356"/>
-      <stop offset="55%" stop-color="#5F9C2C"/>
-      <stop offset="100%" stop-color="#386A14"/>
-    </linearGradient>
-    <linearGradient id="sauceGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#CD7119"/>
-      <stop offset="100%" stop-color="#7E3A07"/>
-    </linearGradient>
-    <radialGradient id="seedGrad" cx="32%" cy="28%" r="75%">
-      <stop offset="0%" stop-color="#FFF8E0"/>
-      <stop offset="100%" stop-color="#E2BE71"/>
-    </radialGradient>
-    <radialGradient id="onionGrad" cx="38%" cy="22%" r="85%">
-      <stop offset="0%" stop-color="#E8B255"/>
-      <stop offset="55%" stop-color="#C8852E"/>
-      <stop offset="100%" stop-color="#955F18"/>
-    </radialGradient>
-    <filter id="softGrain" x="-15%" y="-15%" width="130%" height="130%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="11" result="n"/>
-      <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.07 0" result="grain"/>
-      <feComposite in="grain" in2="SourceGraphic" operator="over"/>
-    </filter>
-  </defs>
-
-  <!-- contact shadow -->
-  <ellipse class="layer" data-layer="0" cx="230" cy="494" rx="172" ry="14" fill="rgba(0,0,0,0.5)"/>
-
-  <!-- ===== L0 bun-bot ===== -->
-  <g class="layer" data-layer="0">
-    <path d="M 78,420
-             C 60,420 50,442 52,460
-             C 53,478 70,490 95,490
-             L 365,490
-             C 390,490 407,478 408,460
-             C 410,442 400,420 382,420
-             C 370,406 350,398 230,398
-             C 110,398 90,406 78,420 Z"
-          fill="url(#bunBotGrad)" filter="url(#softGrain)"/>
-    <path d="M 78,420 C 60,420 50,442 52,460 C 53,478 70,490 95,490"
-          fill="none" stroke="#5C300C" stroke-width="1.5" opacity="0.3"/>
-    <path d="M 382,420 C 400,420 410,442 408,460 C 407,478 390,490 365,490"
-          fill="none" stroke="#5C300C" stroke-width="1.5" opacity="0.3"/>
-  </g>
-
-  <!-- ===== L1 sauce (glistening, dripping over patty edge) ===== -->
-  <g class="layer" data-layer="1">
-    <path d="M 78,402 Q 160,385 230,389 Q 300,385 382,402 Q 374,412 230,414 Q 86,412 78,402 Z" fill="url(#sauceGrad)"/>
-    <ellipse cx="180" cy="397" rx="22" ry="3.5" fill="#E8924A" opacity="0.5"/>
-    <ellipse cx="290" cy="396" rx="18" ry="3" fill="#E8924A" opacity="0.4"/>
-    <path d="M 118,408 Q 115,422 120,433" stroke="#7E3A07" stroke-width="4.5" fill="none" stroke-linecap="round" opacity="0.85"/>
-    <path d="M 336,407 Q 341,421 335,431" stroke="#7E3A07" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.85"/>
-  </g>
-
-  <!-- ===== L2 onion (caramelized, peeking past patty) ===== -->
-  <g class="layer" data-layer="2">
-    <path d="M 80,386 Q 158,370 230,374 Q 302,370 380,386 L 376,400 Q 230,409 84,400 Z"
-          fill="url(#onionGrad)" filter="url(#softGrain)"/>
-    <path d="M 106,384 Q 230,377 354,384" stroke="#6E4310" stroke-width="1.6" fill="none" opacity="0.6"/>
-    <path d="M 128,388 Q 230,382 332,388" stroke="#6E4310" stroke-width="1.2" fill="none" opacity="0.5"/>
-    <path d="M 150,392 Q 230,387 310,392" stroke="#6E4310" stroke-width="1" fill="none" opacity="0.4"/>
-    <ellipse cx="150" cy="381" rx="11" ry="4.5" fill="#7A4A12" opacity="0.45" transform="rotate(-8 150 381)"/>
-    <ellipse cx="300" cy="382" rx="10" ry="4" fill="#7A4A12" opacity="0.45" transform="rotate(10 300 382)"/>
-    <ellipse cx="195" cy="395" rx="9" ry="3.5" fill="#E8B255" opacity="0.5" transform="rotate(5 195 395)"/>
-    <ellipse cx="270" cy="396" rx="8" ry="3" fill="#E8B255" opacity="0.45" transform="rotate(-6 270 396)"/>
-  </g>
-
-  <!-- ===== L3 patty1 (smashed, irregular, charred edge) ===== -->
-  <g class="layer" data-layer="3">
-    <path d="M 70,378 Q 58,362 78,353 Q 104,342 162,345 Q 230,340 306,345
-             Q 364,342 388,354 Q 404,362 392,378
-             Q 400,389 380,393 Q 230,400 80,393 Q 62,389 70,378 Z"
-          fill="url(#pattyGrad)" filter="url(#softGrain)"/>
-    <path d="M 88,358 Q 144,348 196,351 M 250,348 Q 308,346 360,357"
-          stroke="#85543353" stroke-width="2.5" fill="none" opacity="0.5"/>
-    <circle cx="82" cy="375" r="3.4" fill="#150A04" opacity="0.75"/>
-    <circle cx="382" cy="369" r="2.8" fill="#150A04" opacity="0.7"/>
-    <circle cx="122" cy="390" r="2.3" fill="#150A04" opacity="0.55"/>
-    <circle cx="320" cy="391" r="2.7" fill="#150A04" opacity="0.55"/>
-    <circle cx="230" cy="395" r="2" fill="#150A04" opacity="0.45"/>
-  </g>
-
-  <!-- ===== L4 cheese1 (melted cheddar, drips below patty) ===== -->
-  <g class="layer" data-layer="4">
-    <path d="M 74,352 Q 65,340 88,335 Q 230,326 372,335 Q 395,340 386,352
-             Q 393,360 376,366 L 84,366 Q 67,360 74,352 Z" fill="url(#cheeseGrad)"/>
-    <path d="M 96,361 Q 90,380 98,398 Q 104,380 101,363" fill="#F5C030"/>
-    <path d="M 360,358 Q 368,376 360,393 Q 353,376 356,360" fill="#F5C030"/>
-    <path d="M 230,363 Q 225,375 232,387" stroke="#F0A91E" stroke-width="6.5" fill="none" stroke-linecap="round"/>
-    <path d="M 150,364 Q 146,374 151,384" stroke="#F0A91E" stroke-width="4.5" fill="none" stroke-linecap="round" opacity="0.85"/>
-  </g>
-
-  <!-- ===== L5 patty2 ===== -->
-  <g class="layer" data-layer="5">
-    <path d="M 72,332 Q 60,316 80,307 Q 106,296 164,299 Q 230,294 304,299
-             Q 360,296 386,308 Q 400,316 390,332
-             Q 397,343 378,347 Q 230,353 82,347 Q 64,343 72,332 Z"
-          fill="url(#pattyGrad)" filter="url(#softGrain)"/>
-    <path d="M 90,312 Q 146,303 198,306 M 252,302 Q 304,300 354,311"
-          stroke="#85543353" stroke-width="2.5" fill="none" opacity="0.5"/>
-    <circle cx="86" cy="330" r="3.2" fill="#150A04" opacity="0.7"/>
-    <circle cx="376" cy="323" r="2.7" fill="#150A04" opacity="0.65"/>
-    <circle cx="140" cy="345" r="2" fill="#150A04" opacity="0.5"/>
-  </g>
-
-  <!-- ===== L6 cheese2 (smoked scamorza, lighter melt) ===== -->
-  <g class="layer" data-layer="6">
-    <path d="M 80,306 Q 71,295 94,291 Q 230,283 366,291 Q 389,295 380,306
-             Q 387,313 372,318 L 88,318 Q 73,313 80,306 Z" fill="url(#cheese2Grad)"/>
-    <path d="M 104,315 Q 99,328 106,340" stroke="#CC9116" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.8"/>
-    <path d="M 348,313 Q 354,325 347,336" stroke="#CC9116" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.8"/>
-  </g>
-
-  <!-- ===== L7 lettuce (ruffled, widest layer — peeks well past bun) ===== -->
-  <g class="layer" data-layer="7" filter="url(#softGrain)">
-    <path d="M 38,288
-             Q 57,260 78,282 Q 98,256 120,280 Q 142,254 164,279
-             Q 186,253 209,278 Q 230,253 251,278 Q 274,253 296,279
-             Q 318,254 340,280 Q 362,256 384,282 Q 403,260 422,288
-             L 416,306 Q 230,320 44,306 Z" fill="url(#lettuceGrad)"/>
-    <path d="M 70,278 Q 90,268 96,283 M 155,275 Q 175,266 181,281 M 260,275 Q 280,266 286,281 M 350,278 Q 370,268 376,283"
-          stroke="#386A14" stroke-width="1.5" fill="none" opacity="0.65"/>
-    <path d="M 105,296 L 355,296" stroke="#fff" stroke-width="0.5" opacity="0.08"/>
-  </g>
-
-
-  <!-- ===== L8 bun-top (crown, sesame seeds) ===== -->
-  <g class="layer" data-layer="8">
-    <path d="M 36,274
-             C 24,194 70,148 132,124
-             C 168,108 192,102 230,102
-             C 268,102 292,108 328,124
-             C 390,148 436,194 424,274
-             C 424,284 422,288 230,288
-             C 38,288 36,284 36,274 Z"
-          fill="url(#bunTopGrad)" filter="url(#softGrain)"/>
-    <path d="M 96,168 Q 150,128 218,116" stroke="#F2C481" stroke-width="16" fill="none" opacity="0.25" stroke-linecap="round"/>
-    <g fill="url(#seedGrad)">
-      <ellipse cx="132" cy="178" rx="6.5" ry="3.2" transform="rotate(-20 132 178)"/>
-      <ellipse cx="170" cy="155" rx="6" ry="3" transform="rotate(15 170 155)"/>
-      <ellipse cx="208" cy="140" rx="6.5" ry="3.2" transform="rotate(-10 208 140)"/>
-      <ellipse cx="252" cy="138" rx="6" ry="3" transform="rotate(25 252 138)"/>
-      <ellipse cx="292" cy="148" rx="6.5" ry="3.2" transform="rotate(-15 292 148)"/>
-      <ellipse cx="328" cy="170" rx="6" ry="3" transform="rotate(20 328 170)"/>
-      <ellipse cx="158" cy="208" rx="6.5" ry="3.2" transform="rotate(8 158 208)"/>
-      <ellipse cx="198" cy="192" rx="6" ry="3" transform="rotate(-25 198 192)"/>
-      <ellipse cx="242" cy="189" rx="6.5" ry="3.2" transform="rotate(12 242 189)"/>
-      <ellipse cx="282" cy="197" rx="6" ry="3" transform="rotate(-18 282 197)"/>
-      <ellipse cx="316" cy="216" rx="6.5" ry="3.2" transform="rotate(22 316 216)"/>
-      <ellipse cx="116" cy="232" rx="6" ry="3" transform="rotate(-12 116 232)"/>
-      <ellipse cx="156" cy="248" rx="6.5" ry="3.2" transform="rotate(18 156 248)"/>
-      <ellipse cx="204" cy="237" rx="6" ry="3" transform="rotate(-8 204 237)"/>
-      <ellipse cx="252" cy="240" rx="6.5" ry="3.2" transform="rotate(14 252 240)"/>
-      <ellipse cx="292" cy="248" rx="6" ry="3" transform="rotate(-20 292 248)"/>
-      <ellipse cx="334" cy="236" rx="6.5" ry="3.2" transform="rotate(10 334 236)"/>
-      <ellipse cx="364" cy="213" rx="6" ry="3" transform="rotate(-16 364 213)"/>
-      <ellipse cx="182" cy="222" rx="6" ry="2.9" transform="rotate(6 182 222)"/>
-      <ellipse cx="226" cy="206" rx="6.5" ry="3.2" transform="rotate(-14 226 206)"/>
-      <ellipse cx="272" cy="211" rx="6" ry="2.9" transform="rotate(16 272 211)"/>
-      <ellipse cx="142" cy="262" rx="6" ry="2.9" transform="rotate(-10 142 262)"/>
-      <ellipse cx="312" cy="263" rx="6" ry="2.9" transform="rotate(12 312 263)"/>
-    </g>
-  </g>
-  `;
-
-  const layerEls = Array.from(svg.querySelectorAll('.layer'));
-
-  layerEls.forEach((el) => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(40px) scale(0.85)';
-    el.style.transformOrigin = '230px 488px';
-    el.style.transition = 'transform 0.5s cubic-bezier(.4,0,.2,1), opacity 0.5s ease';
-  });
-
-  let lastVisible = -1;
-
-  function onScroll() {
-    const section = document.getElementById('burger-builder');
-    const rect = section.getBoundingClientRect();
-    const sectionH = section.offsetHeight - window.innerHeight;
-    const scrolled = -rect.top;
-    const progress = Math.max(0, Math.min(1, scrolled / sectionH));
-
-    const totalLayers = layerEls.length;
-    const visibleCount = Math.floor(progress * (totalLayers + 1));
-
-    layerEls.forEach((el, i) => {
-      if (i < visibleCount) {
-        el.style.opacity = '1';
-        el.style.transform = 'translateY(0px) scale(1)';
-      } else {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(40px) scale(0.85)';
-      }
-    });
-
-    const titleIdx = Math.min(visibleCount, titles.length - 1);
-    if (titleIdx !== lastVisible) {
-      titleEl.style.opacity = '0';
-      setTimeout(() => {
-        titleEl.textContent = titles[titleIdx];
-        titleEl.style.opacity = '1';
-        titleEl.style.transition = 'opacity 0.3s';
-      }, 150);
-      lastVisible = titleIdx;
-    }
-
-    hintEl.style.opacity = progress < 0.95 ? '1' : '0';
-  }
-
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
 })();
 
 

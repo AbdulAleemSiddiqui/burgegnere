@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'Intro Script';
+    src: local('Intro Script Light'), local('Intro-Script-Light'),
+        url('IntroScript-Light.woff2') format('woff2'),
+        url('IntroScript-Light.woff') format('woff'),
+        url('IntroScript-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+  }
