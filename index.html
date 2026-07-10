@@ -435,16 +435,31 @@
     position: relative;
     z-index: 1;
     padding: 80px 0;
-    /* Full-opacity menu photo; only a feathered top edge fades in from the board
-       colour so the handoff from the hero background is smooth, not a hard cut. */
+    /* Menu background is a portrait "board" texture with its own border shadows,
+       so fill the section exactly (100% x 100%) instead of cover-cropping it.
+       This keeps the borders visible on all sides, centers it, and avoids the
+       upscaling blur that "cover" caused on this tall section. */
     background-image:
       linear-gradient(to bottom, var(--board-dark) 0px, rgba(26,26,24,0) 220px),
       url('assets/backgrounds/menu_background.jpg');
-    background-size: cover, cover;
+    background-size: 100% 100%, 100% 100%;
     background-position: center, center;
     background-repeat: no-repeat, no-repeat;
   }
+  /* Smooth fade from the menu "board" background into the dark reviews section
+     so the bottom edge of the board image doesn't cut off abruptly. */
+  #menu::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 140px;
+    background: linear-gradient(to bottom, rgba(26,26,24,0), var(--board-dark));
+    pointer-events: none;
+    z-index: 2;
+  }
   .menu-inner {
+    position: relative;
+    z-index: 3;
     max-width: 1100px;
     margin: 0 auto;
     padding: 0 20px;
@@ -609,41 +624,29 @@
     border-radius: 2px;
 }
 
-  /* COMBO BOX */
+  /* COMBO STICKERS — same physical stickers as the real in-store menu */
   .combo-box {
     grid-column: 1 / -1;
-    border: 2px solid var(--gold);
-    border-radius: 2px;
-    padding: 28px;
     display: flex;
-    gap: 40px;
+    flex-wrap: wrap;
+    gap: clamp(24px, 6vw, 56px);
     align-items: center;
     justify-content: center;
-    flex-wrap: wrap;
-    background: rgba(245,200,66,0.04);
+    padding: 32px 0 8px;
   }
-  .combo-item {
-    text-align: center;
+  .combo-sticker {
+    height: clamp(140px, 17vw, 200px);
+    width: auto;
+    display: block;
+    filter: drop-shadow(0 8px 16px rgba(0,0,0,0.6));
+    transition: transform 0.25s ease;
   }
-  .combo-label {
-    font-family: var(--font-title);
-    font-size: 2rem;
-    color: var(--gold);
+  .combo-sticker.menu   { transform: rotate(-3deg); }
+  .combo-sticker.double { transform: rotate(2.5deg); }
+  .combo-sticker:hover  { transform: rotate(0deg) scale(1.04); }
+  @media (max-width: 760px) {
+    .combo-sticker { height: clamp(120px, 32vw, 170px); }
   }
-  .combo-sub {
-    font-family: var(--font-secondary);
-    font-size: 1rem;
-    color: var(--chalk-dim);
-  }
-  .combo-includes {
-    font-family: var(--font-secondary);
-    font-size: 1.1rem;
-    color: var(--chalk-white);
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-  .combo-includes span::before { content: '✓ '; color: var(--gold); }
 
   /* ===== DELIVERY SECTION ===== */
   #order {
@@ -737,6 +740,30 @@
     opacity: 0.6;
   }
 
+  /* SEE MORE REVIEWS */
+  .reviews-more {
+    text-align: center;
+    margin-top: 48px;
+  }
+  .reviews-more-btn {
+    display: inline-block;
+    border: 1.5px solid var(--gold);
+    color: var(--gold);
+    font-family: var(--font-secondary);
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 12px 32px;
+    border-radius: 2px;
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    transition: all 0.2s;
+  }
+  .reviews-more-btn:hover {
+    background: var(--gold);
+    color: #111;
+    transform: translateY(-2px);
+  }
+
   /* ===== INFO / FIND US ===== */
   #info {
     position: relative;
@@ -780,6 +807,32 @@
   }
   .info-block-content a:hover { border-color: var(--gold); color: var(--gold); }
 
+  /* ORARI */
+  .hours { display: flex; flex-direction: column; gap: 10px; }
+  .hours-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 8px 0;
+    border-bottom: 1px dashed var(--chalk-faint);
+  }
+  .hours-row:last-child { border-bottom: none; }
+  .hours-days {
+    font-family: var(--font-secondary);
+    font-size: 1rem;
+    color: var(--gold);
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+  .hours-time {
+    font-family: var(--font-3d);
+    font-size: 0.9rem;
+    color: var(--chalk-white);
+    text-align: right;
+    line-height: 1.4;
+  }
+
   /* SOCIAL */
   .social-links {
     display: flex;
@@ -818,7 +871,7 @@
     margin-bottom: 8px;
   }
   .footer-sub {
-    font-family: var(--font-secondary);
+    font-family: var(--font-3d);
     font-size: 0.75rem;
     color: var(--chalk-dim);
     letter-spacing: 0.2em;
@@ -833,7 +886,7 @@
     flex-wrap: wrap;
   }
   .footer-links a {
-    font-family: var(--font-secondary);
+    font-family: var(--font-3d);
     font-size: 0.9rem;
     color: var(--chalk-dim);
     text-decoration: none;
@@ -1066,6 +1119,11 @@
       <div class="review-author">— Google Review</div>
     </div>
   </div>
+
+  <div class="reviews-more">
+    <a href="https://search.google.com/local/reviews?placeid=ChIJ9x4-NABD0xIRAXcPDbRpnWY"
+       target="_blank" rel="noopener" class="reviews-more-btn">Vedi tutte le recensioni →</a>
+  </div>
 </section>
 
 <!-- ===== INFO ===== -->
@@ -1086,10 +1144,21 @@
     </div>
     <div>
       <div class="info-block-title">🕐 Orari</div>
-      <div class="info-block-content">
-        Lun–Dom<br>
-        12:00 – 15:00<br>
-        18:30 – 22:30
+      <div class="info-block-content hours">
+        <div class="hours-row">
+          <span class="hours-days">Lun – Ven</span>
+          <span class="hours-time">
+            12:00 – 15:00<br>
+            18:30 – 22:30
+          </span>
+        </div>
+        <div class="hours-row">
+          <span class="hours-days">Sab – Dom</span>
+          <span class="hours-time">
+            12:00 – 15:00<br>
+            18:30 – 23:30
+          </span>
+        </div>
       </div>
     </div>
     <div>
@@ -1434,22 +1503,10 @@ function renderMenu(lang) {
       </div>
     </div>
 
-    <!-- Combo box full width -->
+    <!-- Combo stickers (full width) — match the real in-store menu -->
     <div class="combo-box full-width">
-      <div class="combo-item">
-        <div class="combo-label">${l.combo}</div>
-        <div class="combo-sub">Burger + ${l.comboIncludes.join(' + ')}</div>
-      </div>
-      <div class="combo-includes">
-        ${l.comboIncludes.map(c => `<span>${c}</span>`).join('')}
-      </div>
-      <div class="combo-item">
-        <div class="combo-label" style="font-size:2.5rem">${l.comboPrice}</div>
-      </div>
-      <div class="combo-item" style="border-left:1px dashed rgba(242,239,229,0.15); padding-left:32px">
-        <div class="combo-label">${l.doubleLabel}</div>
-        <div class="combo-sub">${l.doubleSub}</div>
-      </div>
+      <img class="combo-sticker menu"   src="assets/backgrounds/combo1.png" alt="Menu combo: Patatine + Bibita — +€4.50">
+      <img class="combo-sticker double" src="assets/backgrounds/combo2.png" alt="Doppia carne: 2× Carne — +€2.50">
     </div>
 
     <!-- Sauces & Extra -->
