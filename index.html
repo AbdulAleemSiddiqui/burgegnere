@@ -624,19 +624,19 @@
     border-radius: 2px;
 }
 
-  /* COMBO STICKERS — same physical stickers as the real in-store menu */
+  /* COMBO STICKERS — same physical stickers as the real in-store menu,
+     shown side by side directly under the "Speciali" section. */
   .combo-box {
-    grid-column: 1 / -1;
     display: flex;
     flex-wrap: wrap;
-    gap: clamp(24px, 6vw, 56px);
+    gap: clamp(16px, 4vw, 32px);
     align-items: center;
     justify-content: center;
-    padding: 32px 0 8px;
+    margin-top: 28px;
   }
   .combo-sticker {
-    height: clamp(140px, 17vw, 200px);
-    width: auto;
+    width: clamp(108px, 26vw, 150px);
+    height: auto;
     display: block;
     filter: drop-shadow(0 8px 16px rgba(0,0,0,0.6));
     transition: transform 0.25s ease;
@@ -645,7 +645,7 @@
   .combo-sticker.double { transform: rotate(2.5deg); }
   .combo-sticker:hover  { transform: rotate(0deg) scale(1.04); }
   @media (max-width: 760px) {
-    .combo-sticker { height: clamp(120px, 32vw, 170px); }
+    .combo-sticker { width: clamp(96px, 34vw, 140px); }
   }
 
   /* ===== DELIVERY SECTION ===== */
@@ -734,7 +734,7 @@
     margin-bottom: 6px;
   }
   .review-author {
-    font-family: var(--font-secondary);
+    font-family: var(--font-3d);
     font-size: 0.75rem;
     color: var(--chalk-dim);
     opacity: 0.6;
@@ -1105,25 +1105,26 @@
   <div class="reviews-grid">
     <div class="review-card">
       <div class="review-stars">★★★★★</div>
-      <p class="review-text">Best burger in Genova and Italy! Very delicious! The fries are well cooked. Burger's meat is tender and juicy. The owner is very friendly and nice.</p>
-      <div class="review-author">— Google Review</div>
+      <p class="review-text">This was the best burger place in genova!! it was clean and delicious food! Going back tomorrow for more. the service was great too, kind friendly guys and can’t stress how good the meal was.</p>
+      <div class="review-author">— Mourad Kadi (Google Review)</div>
     </div>
     <div class="review-card">
       <div class="review-stars">★★★★★</div>
-      <p class="review-text">We stayed in Genova for 4 days. We ate here 3 out of those 4 days. The jalapeno burger was amazing — meat tender, sauces delicious, portions fulfilling. Halal burgers that are actually delicious!</p>
-      <div class="review-author">— TripAdvisor</div>
+      <p class="review-text">Curiosity drew us to this small, well-kept place where science and taste meet! We ate a delicious smash burger! It brought back a familiar taste from when I was a child! Kudos to the guys who had the courage to offer something new!</p>
+      <div class="review-author">— Tulipe74 (TripAdvisor)</div>
     </div>
     <div class="review-card">
       <div class="review-stars">★★★★★</div>
-      <p class="review-text">This was a perfect smashburger — onions, cheese, mushrooms all perfect. If you want a really good smashburger in Genoa, this is the place.</p>
-      <div class="review-author">— Google Review</div>
+      <p class="review-text">Absolutely amazing food, we ordered BBQ, Gorgonzola, and Mushroom. The sandwiches were very tasty and the quality was very good, for sure we will repeat it. The staff were very helpful, very welcoming and cheerful.</p>
+      <div class="review-author">— Hany Hamed (Google Review)</div>
     </div>
   </div>
 
   <div class="reviews-more">
-    <a href="https://search.google.com/local/reviews?placeid=ChIJ9x4-NABD0xIRAXcPDbRpnWY"
+    <a href="https://www.google.com/maps/place/Burgegnere/@44.4094285,8.9299657,17z/data=!4m8!3m7!1s0x12d34300343e1ef7:0x669d69b40d0f7701!8m2!3d44.4094247!4d8.9325406!9m1!1b1!16s%2Fg%2F11m5jzsck5?entry=ttu&g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D"
        target="_blank" rel="noopener" class="reviews-more-btn">Vedi tutte le recensioni →</a>
   </div>
+
 </section>
 
 <!-- ===== INFO ===== -->
@@ -1480,6 +1481,12 @@ function renderMenu(lang) {
         <div class="menu-cat-title">${l.speciali}</div>
         ${d.speciali.map(renderItem).join('')}
       </div>
+
+      <!-- Combo stickers side by side, below Speciali -->
+      <div class="combo-box">
+        <img class="combo-sticker menu"   src="assets/backgrounds/combo1.png" alt="Menu combo: Patatine + Bibita — +€4.50">
+        <img class="combo-sticker double" src="assets/backgrounds/combo2.png" alt="Doppia carne: 2× Carne — +€2.50">
+      </div>
     </div>
 
     <!-- Col 2: Fries + Drinks + Sauces -->
@@ -1501,12 +1508,6 @@ function renderMenu(lang) {
         <div class="menu-cat-title white">${l.drinks}</div>
         ${d.drinks.map(renderItem).join('')}
       </div>
-    </div>
-
-    <!-- Combo stickers (full width) — match the real in-store menu -->
-    <div class="combo-box full-width">
-      <img class="combo-sticker menu"   src="assets/backgrounds/combo1.png" alt="Menu combo: Patatine + Bibita — +€4.50">
-      <img class="combo-sticker double" src="assets/backgrounds/combo2.png" alt="Doppia carne: 2× Carne — +€2.50">
     </div>
 
     <!-- Sauces & Extra -->
