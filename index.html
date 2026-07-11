@@ -1545,6 +1545,17 @@ function toggleMobileMenu() {
     links.style.cssText = 'display:flex; flex-direction:column; position:fixed; top:60px; left:0; right:0; background:rgba(26,26,24,0.98); padding:24px; gap:20px; z-index:99;';
   }
 }
+// Collapse the mobile menu after a link is tapped (so it closes on navigation)
+function closeMobileMenu() {
+  const links = document.querySelector('.nav-links');
+  // Only the mobile toggle sets inline display:flex; desktop leaves it untouched.
+  if (links.style.display === 'flex') {
+    links.style.display = 'none';
+  }
+}
+document.querySelectorAll('.nav-links a').forEach(function(a) {
+  a.addEventListener('click', closeMobileMenu);
+});
 </script>
 </body>
 </html>
